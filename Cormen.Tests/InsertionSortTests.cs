@@ -1,9 +1,7 @@
 ﻿using Cormen.Core.Algorithms.Sorting;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Cormen.Tests
 {
@@ -24,7 +22,7 @@ namespace Cormen.Tests
         public void InsertionSortInts(List<int> enumerable)
         {
             var sortedArray = enumerable.OrderBy(x => x).ToArray();
-            var arrayToCheck = enumerable.InsertionSort();
+            var arrayToCheck = InsertionSortClass.Sort(enumerable);
             CollectionAssert.AreEqual(sortedArray, arrayToCheck);
         }
     }
