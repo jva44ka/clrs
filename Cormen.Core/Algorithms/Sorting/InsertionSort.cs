@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using Cormen.Core.Algorithms.Sorting.Interfaces;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Cormen.Core.Algorithms.Sorting
 {
-    // Сортировка вставками
-    public class InsertionSortClass
+    // Сортировка вставками - O(n ^ 2)
+    public class InsertionSortClass : ISort
     {
-        // По неубыванию (возрастанию)
-        public static IEnumerable<int> Sort(IList<int> enumerable)
+        public IEnumerable<int> Sort(IList<int> enumerable)
         {
             if (enumerable.Count <= 1)
                 return enumerable;
@@ -31,7 +31,7 @@ namespace Cormen.Core.Algorithms.Sorting
         }
 
         // По невозрастанию (убыванию)
-        public static IEnumerable<int> SortDesc(IList<int> enumerable)
+        public IEnumerable<int> SortDesc(IList<int> enumerable)
         {
             if (enumerable.Count <= 1)
                 return enumerable;
