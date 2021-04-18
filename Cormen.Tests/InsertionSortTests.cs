@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Cormen.Tests
 {
-    [TestFixture]
+    [TestFixture(Category = "Sorting")]
     public class InsertionSortTests
     {
         private static List<List<int>> testData = new List<List<int>> 
@@ -23,6 +23,14 @@ namespace Cormen.Tests
         {
             var sortedArray = enumerable.OrderBy(x => x).ToArray();
             var arrayToCheck = InsertionSortClass.Sort(enumerable);
+            CollectionAssert.AreEqual(sortedArray, arrayToCheck);
+        }
+
+        [TestCaseSource(nameof(testData))]
+        public void InsertionSortInts_Desc(List<int> enumerable)
+        {
+            var sortedArray = enumerable.OrderByDescending(x => x).ToArray();
+            var arrayToCheck = InsertionSortClass.SortDesc(enumerable);
             CollectionAssert.AreEqual(sortedArray, arrayToCheck);
         }
     }
