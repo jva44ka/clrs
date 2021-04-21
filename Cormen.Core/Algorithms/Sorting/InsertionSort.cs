@@ -5,9 +5,9 @@ using System.Linq;
 namespace Cormen.Core.Algorithms.Sorting
 {
     // Сортировка вставками - O(n ^ 2)
-    public class InsertionSortClass : ISort
+    public class InsertionSortClass : ISortable
     {
-        public IEnumerable<int> Sort(IList<int> enumerable)
+        public IList<int> Sort(IList<int> enumerable)
         {
             if (enumerable.Count <= 1)
                 return enumerable;
@@ -31,7 +31,7 @@ namespace Cormen.Core.Algorithms.Sorting
         }
 
         // По невозрастанию (убыванию)
-        public IEnumerable<int> SortDesc(IList<int> enumerable)
+        public IList<int> SortDesc(IList<int> enumerable)
         {
             if (enumerable.Count <= 1)
                 return enumerable;

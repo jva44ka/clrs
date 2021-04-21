@@ -6,21 +6,21 @@ using System.Text;
 namespace Cormen.Core.Algorithms.Sorting
 {
     // Сортировка слиянием - O(n log n)
-    public class MergeSort : ISort
+    public class MergeSort : ISortable
     {
         #region ascending
-        public IEnumerable<int> Sort(IList<int> enumerable)
+        public IList<int> Sort(IList<int> enumerable)
         {
-            return MergeSortFunc(enumerable, 0, enumerable.Count - 1);
+            return MergeSortAsc(enumerable, 0, enumerable.Count - 1);
         }
 
-        private IEnumerable<int> MergeSortFunc(IList<int> enumerable, int p, int r)
+        private IList<int> MergeSortAsc(IList<int> enumerable, int p, int r)
         {
             if (p < r)
             {
                 int q = Math.Abs((p + r) / 2);
-                MergeSortFunc(enumerable, p, q);
-                MergeSortFunc(enumerable, q + 1, r);
+                MergeSortAsc(enumerable, p, q);
+                MergeSortAsc(enumerable, q + 1, r);
                 Merge(enumerable, p, q, r);
             }
             return enumerable;
@@ -76,18 +76,18 @@ namespace Cormen.Core.Algorithms.Sorting
         #endregion
 
         #region descending
-        public IEnumerable<int> SortDesc(IList<int> enumerable)
+        public IList<int> SortDesc(IList<int> enumerable)
         {
-            return MergeSortFunc_Desc(enumerable, 0, enumerable.Count - 1);
+            return MergeSortDesc(enumerable, 0, enumerable.Count - 1);
         }
 
-        private IEnumerable<int> MergeSortFunc_Desc(IList<int> enumerable, int p, int r)
+        private IList<int> MergeSortDesc(IList<int> enumerable, int p, int r)
         {
             if (p < r)
             {
                 int q = Math.Abs((p + r) / 2);
-                MergeSortFunc_Desc(enumerable, p, q);
-                MergeSortFunc_Desc(enumerable, q + 1, r);
+                MergeSortDesc(enumerable, p, q);
+                MergeSortDesc(enumerable, q + 1, r);
                 MergeDesc(enumerable, p, q, r);
             }
             return enumerable;
