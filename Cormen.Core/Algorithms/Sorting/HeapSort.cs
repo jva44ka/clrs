@@ -15,17 +15,17 @@ namespace Cormen.Core.Algorithms.Sorting
 
         int Parent(int i)
         {
-            return i / 2;
+            return (i - 1) / 2;
         }
 
         int Left(int i)
         {
-            return 2 * i;
+            return 2 * i + 1;
         }
 
         int Right(int i)
         {
-            return 2 * i + 1;
+            return 2 * i + 2;
         }
 
         //Поддержание свойста невозрастающей пирамиды
@@ -34,7 +34,6 @@ namespace Cormen.Core.Algorithms.Sorting
             int l = Left(i);
             int r = Right(i);
             int largest;
-            int buffer;
 
             if (l <= (heapSize - 1) && enumerable[l] > enumerable[i])
                 largest = l;
