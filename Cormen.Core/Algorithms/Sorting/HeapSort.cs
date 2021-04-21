@@ -1,18 +1,17 @@
 ﻿using Cormen.Core.Algorithms.Sorting.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Cormen.Core.Algorithms.Sorting
 {
-    public class HeapSort : ISort
+    // Сортировка кучей / пирамидальная - O(n log n)
+    public class HeapSort : ISortable
     {
-        public IEnumerable<int> Sort(IList<int> enumerable)
+        public IList<int> Sort(IList<int> enumerable)
         {
             return HeapSortByAsc(enumerable, enumerable.Count);
         }
 
-        public IEnumerable<int> SortDesc(IList<int> enumerable)
+        public IList<int> SortDesc(IList<int> enumerable)
         {
             return HeapSortByDesc(enumerable, enumerable.Count);
         }
@@ -80,14 +79,12 @@ namespace Cormen.Core.Algorithms.Sorting
         {
             for (int i = heapSize / 2 - 1; i >= 0; i--)
                 MaxHepify(enumerable, heapSize, i);
-
         }
 
         void BuildMinHeap(IList<int> enumerable, int heapSize)
         {
             for (int i = heapSize / 2 - 1; i >= 0; i--)
                 MinHepify(enumerable, heapSize, i);
-
         }
 
         IList<int> HeapSortByAsc(IList<int> enumerable, int heapSize)

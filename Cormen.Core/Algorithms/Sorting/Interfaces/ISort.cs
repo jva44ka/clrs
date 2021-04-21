@@ -2,12 +2,12 @@
 
 namespace Cormen.Core.Algorithms.Sorting.Interfaces
 {
-    public interface ISort
+    public interface ISortable
     {
         // По неубыванию (возрастанию)
-        public IEnumerable<int> Sort(IList<int> enumerable);
+        public IList<int> Sort(IList<int> enumerable);
 
         // По невозрастанию (убыванию)
-        public IEnumerable<int> SortDesc(IList<int> enumerable);
+        public IList<int> SortDesc(IList<int> enumerable);
     }
 }
