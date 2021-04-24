@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Cormen.Tests.Helpers
+namespace Cormen.Tests.Data
 {
-    public class SortingHelper
+    public class SortingData
     {
         internal static List<List<int>> TestData = new List<List<int>>
         {

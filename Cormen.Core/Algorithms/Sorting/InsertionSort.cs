@@ -5,7 +5,7 @@ using System.Linq;
 namespace Cormen.Core.Algorithms.Sorting
 {
     // Сортировка вставками - O(n ^ 2)
-    public class InsertionSortClass : ISortable
+    public class InsertionSort : ISortable
     {
         public IList<int> Sort(IList<int> enumerable)
         {
