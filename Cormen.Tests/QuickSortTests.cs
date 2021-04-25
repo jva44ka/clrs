@@ -2,12 +2,11 @@
 using Cormen.Tests.Data;
 using Cormen.Tests.Generic;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Cormen.Tests
 {
+    [TestFixture(Category = "Sorting")]
     public class QuickSortTests
     {
         private static List<List<int>> _testData = SortingData.TestData;
