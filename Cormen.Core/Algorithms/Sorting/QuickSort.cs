@@ -3,6 +3,11 @@ using System.Collections.Generic;
 
 namespace Cormen.Core.Algorithms.Sorting
 {
+    /*
+     * Быстрая сортировка с разбиением Ломуто
+     * O(n log n) - в среднем
+     * O(n ^ 2) - худший случай
+     */
     public class QuickSort : ISortable
     {
         public IList<int> Sort(IList<int> enumerable)
