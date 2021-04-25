@@ -14,13 +14,13 @@ namespace Cormen.Tests
         [TestCaseSource(nameof(_testData))]
         public void HeapSortInts(List<int> enumerable)
         {
-            GenericSortTests.Test(enumerable, new HeapSort());
+            GenericSortTests.TestAsc(enumerable, new HeapSort().Sort);
         }
 
         [TestCaseSource(nameof(_testData))]
         public void HeapSortInts_Desc(List<int> enumerable)
         {
-            GenericSortTests.Test(enumerable, new HeapSort());
+            GenericSortTests.TestDesc(enumerable, new HeapSort().SortDesc);
         }
     }
 }

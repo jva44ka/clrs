@@ -15,13 +15,13 @@ namespace Cormen.Tests
         [TestCaseSource(nameof(_testData))]
         public void QuickSortInts(List<int> enumerable)
         {
-            GenericSortTests.Test(enumerable, new QuickSort());
+            GenericSortTests.TestAsc(enumerable, new QuickSort().Sort);
         }
 
         [TestCaseSource(nameof(_testData))]
         public void QuickSortInts_Desc(List<int> enumerable)
         {
-            GenericSortTests.Test(enumerable, new QuickSort());
+            GenericSortTests.TestDesc(enumerable, new QuickSort().SortDesc);
         }
     }
 }
