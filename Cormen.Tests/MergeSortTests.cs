@@ -14,13 +14,13 @@ namespace Cormen.Tests
         [TestCaseSource(nameof(_testData))]
         public void MergeSortInts(List<int> enumerable)
         {
-            GenericSortTests.Test(enumerable, new MergeSort());
+            GenericSortTests.TestAsc(enumerable, new MergeSort().Sort);
         }
 
         [TestCaseSource(nameof(_testData))]
         public void MergeSortInts_Desc(List<int> enumerable)
         {
-            GenericSortTests.Test(enumerable, new MergeSort());
+            GenericSortTests.TestDesc(enumerable, new MergeSort().SortDesc);
         }
     }
 }
