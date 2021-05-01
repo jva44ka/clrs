@@ -53,7 +53,7 @@ namespace Cormen.Core.Structures
             var targetBucket = GetBucketNum(key);
 
             int index;
-            if (Fullness < 0.7)
+            if (Fullness > 0.7)
             {
                 index = _count;
             }
@@ -82,6 +82,9 @@ namespace Cormen.Core.Structures
             _entries[targetIndex].key = default(TKey);
             _entries[targetIndex].value = default(TValue);
             _count--;
+
+            if (Fullness < 0.7)
+                Resize(Count / 2);
         }
 
         bool IsExistsKey(TKey key)

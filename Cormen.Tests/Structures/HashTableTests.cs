@@ -12,16 +12,23 @@ namespace Cormen.Tests.Structures
         [Test]
         public void HashTableAdd()
         {
-            var key = "Ключик 8495485";
-            var value = "Значение №8493448";
+            var key1 = "Ключик 8495485";
+            var value1 = "Значение №8493448";
+            var key2 = "Ключик 8495";
+            var value2 = "Значение №8498";
 
             var hashTable = new HashTable<string, string>();
             Assert.AreEqual(0, hashTable.Count);
-            Assert.AreEqual(null, hashTable[key]);
+            Assert.AreEqual(null, hashTable[key1]);
+            Assert.AreEqual(null, hashTable[key2]);
 
-            hashTable.Add(key, value);
+            hashTable.Add(key1, value1);
             Assert.AreEqual(1, hashTable.Count);
-            Assert.AreEqual(value, hashTable[key]);
+            Assert.AreEqual(value1, hashTable[key1]);
+
+            hashTable.Add(key2, value2);
+            Assert.AreEqual(2, hashTable.Count);
+            Assert.AreEqual(value2, hashTable[key2]);
         }
 
         [Test]
