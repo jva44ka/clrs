@@ -20,7 +20,6 @@ namespace Cormen.Core.Structures
         private int[] _buckets;
         // Элементы вместе с ключем и ссылками на предыдущий/следущий элементы в списке (если есть коллизия)
         private Entry[] _entries;
-        private int _count;
 
         public int Capacity => _entries.Length;
         public double Fullness => (double)Count / _entries.Length;
@@ -55,14 +54,13 @@ namespace Cormen.Core.Structures
             int index;
             if (Fullness > 0.7)
             {
-                index = _count;
+                index = Count;
             }
             else
             {
                 Resize(Count * 2);
-                index = _count;
+                index = Count;
             }
-            _count++;
             _entries[index].hashCode = hashCode;
             _entries[index].key = key;
             _entries[index].value = value;
@@ -74,14 +72,12 @@ namespace Cormen.Core.Structures
             if (!IsExistsKey(key))
                 throw new ArgumentException("Element with this key is not exists in hash table");
 
-            var hashCode = GetHashCode(key);
             var targetBucket = GetBucketNum(key);
             var targetIndex = _buckets[targetBucket];
 
-            _entries[targetIndex].hashCode = 0;
+            _entries[targetIndex].hashCode = default(int);
             _entries[targetIndex].key = default(TKey);
             _entries[targetIndex].value = default(TValue);
-            _count--;
 
             if (Fullness < 0.7)
                 Resize(Count / 2);
@@ -116,11 +112,9 @@ namespace Cormen.Core.Structures
         {
             _buckets = new int[length];
             _entries = new Entry[length];
-            _count = 0;
         }
 
-        // Вызывать при copacity ~0.7
-        void Resize(int length = 10)
+        void Resize(int newLength = 10)
         {
 
         }
