@@ -4,7 +4,7 @@ using Cormen.Tests.Generic;
 using NUnit.Framework;
 using System.Collections.Generic;
 
-namespace Cormen.Tests
+namespace Cormen.Tests.Sorting
 {
     [TestFixture(Category = "Sorting")]
     public class MergeSortTests

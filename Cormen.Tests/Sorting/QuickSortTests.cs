@@ -4,23 +4,23 @@ using Cormen.Tests.Generic;
 using NUnit.Framework;
 using System.Collections.Generic;
 
-namespace Cormen.Tests
+namespace Cormen.Tests.Sorting
 {
     [TestFixture(Category = "Sorting")]
-    public class InsertionSortTests
+    public class QuickSortTests
     {
         private static List<List<int>> _testData = SortingData.TestData;
 
         [TestCaseSource(nameof(_testData))]
-        public void InsertionSortInts(List<int> enumerable)
+        public void QuickSortInts(List<int> enumerable)
         {
-            GenericSortTests.TestAsc(enumerable, new InsertionSort().Sort);
+            GenericSortTests.TestAsc(enumerable, new QuickSort().Sort);
         }
 
         [TestCaseSource(nameof(_testData))]
-        public void InsertionSortInts_Desc(List<int> enumerable)
+        public void QuickSortInts_Desc(List<int> enumerable)
         {
-            GenericSortTests.TestDesc(enumerable, new InsertionSort().SortDesc);
+            GenericSortTests.TestDesc(enumerable, new QuickSort().SortDesc);
         }
     }
 }
