@@ -33,7 +33,10 @@ namespace Cormen.Core.Structures
 
         BSTNode TreeSearch(BSTNode currentNode, TKey key)
         {
-            if (currentNode == null || key.Equals(currentNode._key))
+            if (currentNode == null)
+                throw new ArgumentException("Node with this key is not exists");
+
+            if (key.Equals(currentNode._key))
                 return currentNode;
 
             var compareResult = key.CompareTo(currentNode._key);
@@ -43,18 +46,18 @@ namespace Cormen.Core.Structures
                 return TreeSearch(currentNode._right, currentNode._key);
         }
 
-        BSTNode TreeMinimum(BSTNode currentNode, TKey key)
+        BSTNode TreeMinimum(BSTNode currentNode)
         {
-            if (currentNode == null || key.Equals(currentNode._key))
+            if (currentNode._left == null)
                 return currentNode;
-            return TreeSearch(currentNode._left, currentNode._key);
+            return TreeMinimum(currentNode._left);
         }
 
-        BSTNode TreeMaximum(BSTNode currentNode, TKey key)
+        BSTNode TreeMaximum(BSTNode currentNode)
         {
-            if (currentNode == null || key.Equals(currentNode._key))
+            if (currentNode._right == null)
                 return currentNode;
-            return TreeSearch(currentNode._right, currentNode._key);
+            return TreeMaximum(currentNode._right);
         }
 
         void DeleteNode(BSTNode node)
