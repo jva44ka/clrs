@@ -6,11 +6,11 @@ using System.Text;
 
 namespace Cormen.Tests.Structures
 {
-    [TestFixture(Category = "Structures")]
+    [TestFixture(Category = "Data Structures")]
     public class HashTableTests
     {
         [Test]
-        public void HashTableAdd()
+        public void Add()
         {
             var key1 = "Ключик 8495485";
             var value1 = "Значение №8493448";
@@ -32,7 +32,7 @@ namespace Cormen.Tests.Structures
         }
 
         [Test]
-        public void HashTableAddAndRemove()
+        public void AddAndRemove()
         {
             var key = "Ключик 85485";
             var value = "Значение №93448";

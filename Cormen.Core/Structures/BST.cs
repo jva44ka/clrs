@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Cormen.Core.Structures
 {
     // Простое бинарное дерево поиска
-    public class BST<TKey, TValue> where TKey : IComparable<TKey>
+    public class BST<TKey, TValue> where TKey : class, IComparable<TKey>
     {
         protected class BSTNode
         {
@@ -47,9 +47,13 @@ namespace Cormen.Core.Structures
         List<TValue> IncoderTreeWalk(BSTNode node, List<TValue> result)
         {
             result ??= new List<TValue>();
-            IncoderTreeWalk(node._left, result);
+            if (node._left != null)
+                IncoderTreeWalk(node._left, result);
+
             result.Add(node._value);
-            IncoderTreeWalk(node._right, result);
+            if (node._right != null)
+                IncoderTreeWalk(node._right, result);
+
             return result;
         }
 
@@ -63,17 +67,20 @@ namespace Cormen.Core.Structures
 
             var compareResult = key.CompareTo(node._key);
             if (compareResult < 0)
-                return Search(node._left, node._key);
+                return Search(node._left, key);
             else
-                return Search(node._right, node._key);
+                return Search(node._right, key);
         }
 
         void FindParent(BSTNode node, TKey key, ref BSTNode result)
         {
             if (node == null)
+            {
                 result = null;
+                return;
+            }
 
-            if (key.Equals(node._left._key) || key.Equals(node._right._key))
+            if (key.Equals(node?._left?._key) || key.Equals(node?._right?._key))
                 result = node;
 
             var compareResult = key.CompareTo(node._key);
@@ -101,7 +108,11 @@ namespace Cormen.Core.Structures
         void Insert(ref BSTNode node, TKey key, TValue value)
         {
             if (node == null)
-                node = new BSTNode { _value = value };
+                node = new BSTNode 
+                { 
+                    _key = key,
+                    _value = value 
+                };
             else
             {
                 var compareResult = key.CompareTo(node._key);
@@ -110,7 +121,7 @@ namespace Cormen.Core.Structures
                 else if (compareResult > 0)
                     Insert(ref node._right, key, value);
                 else
-                    throw new ArgumentException("This data already in the tree!");
+                    throw new ArgumentException("This key already in the tree!");
             }
         }
 
