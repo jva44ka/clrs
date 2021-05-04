@@ -40,8 +40,9 @@ namespace Cormen.Core.Structures
 
         public void Delete(TKey key)
         {
-            var findedNode = Search(_root, key);
-            Delete(findedNode);
+            BSTNode findedNode = null;
+            Search(ref _root, key, ref findedNode);
+            Delete(ref findedNode);
         }
 
         List<TValue> IncoderTreeWalk(BSTNode node, List<TValue> result)
@@ -72,6 +73,38 @@ namespace Cormen.Core.Structures
                 return Search(node._right, key);
         }
 
+        void Search(ref BSTNode node, TKey key, ref BSTNode result)
+        {
+            if (node == null)
+                throw new ArgumentException("Node with this key is not exists");
+
+            if (key.Equals(node._key))
+            {
+                result = node;
+                return;
+            }
+
+            var compareResult = key.CompareTo(node._key);
+            if (compareResult < 0)
+                Search(ref node._left, key, ref result);
+            else
+                Search(ref node._right, key, ref result);
+        }
+
+        void DeleteFromParent(BSTNode node)
+        {
+            BSTNode parent = null;
+            FindParent(_root, node._key, ref parent);
+            
+            if (parent != null)
+            {
+                if (node.Equals(parent._left))
+                    parent._left = null;
+                else
+                    parent._right = null;
+            }
+        }
+
         void FindParent(BSTNode node, TKey key, ref BSTNode result)
         {
             if (node == null)
@@ -81,13 +114,16 @@ namespace Cormen.Core.Structures
             }
 
             if (key.Equals(node?._left?._key) || key.Equals(node?._right?._key))
+            {
                 result = node;
+                return;
+            }
 
             var compareResult = key.CompareTo(node._key);
             if (compareResult < 0)
-                FindParent(node._left, node._key, ref result);
+                FindParent(node._left, key, ref result);
             else
-                FindParent(node._right, node._key, ref result);
+                FindParent(node._right, key, ref result);
         }
 
         BSTNode Minimum(BSTNode currentNode)
@@ -144,10 +180,17 @@ namespace Cormen.Core.Structures
         }
 
         // Удаление узла
-        void Delete(BSTNode deletingNode)
+        void Delete(ref BSTNode deletingNode)
         {
+            DeleteFromParent(deletingNode);
+
             if (deletingNode._left == null)
-                Transplant(ref deletingNode, ref deletingNode._right);
+            {
+                if (deletingNode._right == null)
+                    deletingNode = null;
+                else
+                    Transplant(ref deletingNode, ref deletingNode._right);
+            }
             else if (deletingNode._right == null)
                 Transplant(ref deletingNode, ref deletingNode._left);
             else
