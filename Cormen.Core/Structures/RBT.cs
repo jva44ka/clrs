@@ -62,11 +62,11 @@ namespace Cormen.Core.Structures
         internal List<TValue> IncoderTreeWalk(RBTNode<TKey, TValue> node, List<TValue> result)
         {
             result ??= new List<TValue>();
-            if (node.left != null)
+            if (node.left != RBTNode<TKey, TValue>.nil)
                 IncoderTreeWalk(node.left, result);
 
             result.Add(node.value);
-            if (node.right != null)
+            if (node.right != RBTNode<TKey, TValue>.nil)
                 IncoderTreeWalk(node.right, result);
 
             return result;
@@ -81,6 +81,11 @@ namespace Cormen.Core.Structures
     public class RBT<TKey, TValue> where TKey : class, IComparable<TKey>
     {
         public RBTNode<TKey, TValue> root;
+
+        public RBT()
+        {
+            root = RBTNode<TKey, TValue>.nil;
+        }
 
         public List<TValue> IncoderTreeWalk()
         {
@@ -186,7 +191,15 @@ namespace Cormen.Core.Structures
         // Восстановление свойств красного дерева после вставки
         private void InsertFixup(RBTNode<TKey, TValue> newNode)
         {
-            while (newNode.parent.color != RBColor.Red)
+            if (newNode.parent == RBTNode<TKey, TValue>.nil)
+            {
+                newNode.color = RBColor.Black;
+                return;
+            }
+            else if (newNode.parent.parent == RBTNode<TKey, TValue>.nil)
+                return;
+
+            while (newNode.parent.color == RBColor.Red)
             {
                 if (newNode.parent == newNode.parent.parent.left)
                 {
@@ -212,6 +225,7 @@ namespace Cormen.Core.Structures
                 }
                 else
                 {
+                    var height = newNode.BlackHeight(newNode, 0);
                     var y = newNode.parent.parent.left;
                     if (y.color == RBColor.Red)
                     {
