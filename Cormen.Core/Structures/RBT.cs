@@ -71,6 +71,11 @@ namespace Cormen.Core.Structures
 
             return result;
         }
+
+        public override string ToString()
+        {
+            return key.ToString();
+        }
     }
 
     public class RBT<TKey, TValue> where TKey : class, IComparable<TKey>
