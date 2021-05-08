@@ -101,6 +101,12 @@ namespace Cormen.Core.Structures
             });
         }
 
+        public void Delete(TKey key)
+        {
+            var findedNode = root.Search(root, key);
+            Delete(findedNode);
+        }
+
         private RBTNode<TKey, TValue> LeftRotate(RBTNode<TKey, TValue> node)
         {
             // Сохранение правого поддерева node
@@ -249,6 +255,129 @@ namespace Cormen.Core.Structures
             }
 
             root.color = RBColor.Black;
+        }
+
+        private void Transplant(RBTNode<TKey, TValue> oldNode, RBTNode<TKey, TValue> newNode)
+        {
+            if (oldNode.parent == RBTNode<TKey, TValue>.nil)
+                root = newNode;
+            else if (oldNode == oldNode.parent.left)
+                oldNode.parent.left = newNode;
+            else
+                oldNode.parent.right = newNode;
+            newNode.parent = oldNode.parent;
+        }
+
+        private void Delete(RBTNode<TKey, TValue> deletingNode)
+        {
+            var y = deletingNode;
+            var yOriginalColor = y.color;
+            RBTNode<TKey, TValue> x;
+
+            if (deletingNode.left == RBTNode<TKey, TValue>.nil)
+            {
+                x = deletingNode.right;
+                Transplant(deletingNode, deletingNode.right);
+            }
+            else if (deletingNode.right == RBTNode<TKey, TValue>.nil)
+            {
+                x = deletingNode.left;
+                Transplant(deletingNode, deletingNode.left);
+            }
+            else
+            {
+                y = root.Minimum(root);
+                x = y.right;
+                if (y.parent == deletingNode)
+                    x.parent = y;
+                else
+                {
+                    Transplant(y, y.right);
+                    y.right = deletingNode.right;
+                    y.right.parent = y;
+                }
+                Transplant(deletingNode, y);
+                y.left = deletingNode.left;
+                y.left.parent = y;
+                y.color = deletingNode.color;
+            }
+
+            if (yOriginalColor == RBColor.Black)
+                DeleteFixup(x);
+
+        }
+
+        private void DeleteFixup(RBTNode<TKey, TValue> node)
+        {
+            RBTNode<TKey, TValue> w = RBTNode<TKey, TValue>.nil;
+
+            while (node != root && node.color == RBColor.Black)
+            {
+                if (node == node.parent.left)
+                {
+                    w = node.parent.right;
+                    if (w.color == RBColor.Red)
+                    {
+                        w.color = RBColor.Black;            // Случай 1
+                        node.parent.color = RBColor.Red;    // Случай 1
+                        LeftRotate(node.parent);            // Случай 1
+                        w = node.parent.right;              // Случай 1
+                    }
+                    if (w.left.color == RBColor.Black && w.right.color == RBColor.Black)
+                    {
+                        w.color = RBColor.Red;              // Случай 2
+                        node = node.parent;                 // Случай 2
+                    }
+                    else
+                    {
+                        if (w.right.color == RBColor.Black)
+                        {
+                            w.left.color = RBColor.Black;   // Случай 3
+                            w.color = RBColor.Red;          // Случай 3
+                            RightRotate(w);                 // Случай 3
+                            w = node.parent.right;          // Случай 3
+                        }
+                        w.color = node.parent.color;        // Случай 4
+                        node.parent.color = RBColor.Black;  // Случай 4
+                        w.right.color = RBColor.Black;      // Случай 4
+                        LeftRotate(node.parent);            // Случай 4
+                        node = root;                        // Случай 4
+                    }
+                }
+                else
+                {
+                    w = node.parent.left;
+                    if (w.color == RBColor.Red)
+                    {
+                        w.color = RBColor.Black;            // Случай 5
+                        node.parent.color = RBColor.Red;    // Случай 5
+                        RightRotate(node.parent);           // Случай 5
+                        w = node.parent.left;               // Случай 5
+                    }
+                    if (w.right.color == RBColor.Black && w.left.color == RBColor.Black)
+                    {
+                        w.color = RBColor.Red;              // Случай 6
+                        node = node.parent;                 // Случай 6
+                    }
+                    else
+                    {
+                        if (w.left.color == RBColor.Black)
+                        {
+                            w.right.color = RBColor.Black;  // Случай 7
+                            w.color = RBColor.Red;          // Случай 7
+                            LeftRotate(w);                  // Случай 7
+                            w = node.parent.left;           // Случай 7
+                        }
+                        w.color = node.parent.color;        // Случай 8
+                        node.parent.color = RBColor.Black;  // Случай 8
+                        w.left.color = RBColor.Black;       // Случай 8
+                        RightRotate(node.parent);           // Случай 8
+                        node = root;                        // Случай 8
+                    }
+                }
+            }
+
+            node.color = RBColor.Black;
         }
     }
 }

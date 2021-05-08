@@ -68,8 +68,8 @@ namespace Cormen.Tests.Structures
             tree.Insert(value2.ToString(), value2);
             CollectionAssert.AreEqual(new List<int> { 1, 2, 3 }, tree.IncoderTreeWalk());
 
-            //tree.Delete(value2.ToString());
-            CollectionAssert.AreEqual(new List<int> { 1, 3 }, tree.IncoderTreeWalk());
+            tree.Delete(value3.ToString());
+            CollectionAssert.AreEqual(new List<int> { 1, 2 }, tree.IncoderTreeWalk());
         }
     }
 }
