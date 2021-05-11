@@ -45,6 +45,11 @@ namespace Cormen.Core.Structures
             Delete(ref findedNode);
         }
 
+        public void Reverse()
+        {
+            Reverse(_root);
+        }
+
         List<TValue> IncoderTreeWalk(BSTNode node, List<TValue> result)
         {
             result ??= new List<TValue>();
@@ -133,11 +138,11 @@ namespace Cormen.Core.Structures
             return Minimum(currentNode._left);
         }
 
-        BSTNode TreeMaximum(BSTNode currentNode)
+        BSTNode Maximum(BSTNode currentNode)
         {
             if (currentNode._right == null)
                 return currentNode;
-            return TreeMaximum(currentNode._right);
+            return Maximum(currentNode._right);
         }
 
         // Вставка узла
@@ -214,6 +219,20 @@ namespace Cormen.Core.Structures
                 FindParent(minNode._right, minNode._key, ref minNodeLeftParent);
                 minNodeLeftParent = minNode;
             }
+        }
+
+        void Reverse(BSTNode node)
+        {
+            if (node == null)
+                return;
+
+            Reverse(node._left);
+            Reverse(node._right);
+
+            // Обмен левой и правой ноды
+            var bufferRight = node._right;
+            node._right = node._left;
+            node._left = bufferRight;
         }
     }
 }
