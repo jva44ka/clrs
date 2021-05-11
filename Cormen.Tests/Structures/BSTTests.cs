@@ -73,5 +73,22 @@ namespace Cormen.Tests.Structures
             tree.Reverse();
             CollectionAssert.AreEqual(new List<int> { 3, 2, 1 }, tree.IncoderTreeWalk());
         }
+
+        [Test]
+        public void ReverseBigTree()
+        {
+            var values = new List<int> { 2, 1, 3, 4, 5, 6, 7, 9 };
+
+            var tree = new BST<string, int>();
+
+            foreach (var value in values)
+                tree.Insert(value.ToString(), value);
+
+            CollectionAssert.AreEqual(values.OrderBy(x => x), tree.IncoderTreeWalk());
+            var beforeReverseWalkedTree = tree.IncoderTreeWalk();
+
+            tree.Reverse();
+            CollectionAssert.AreEqual(values.OrderByDescending(x => x), tree.IncoderTreeWalk());
+        }
     }
 }
