@@ -138,11 +138,11 @@ namespace Cormen.Core.Structures
             return Minimum(currentNode._left);
         }
 
-        BSTNode TreeMaximum(BSTNode currentNode)
+        BSTNode Maximum(BSTNode currentNode)
         {
             if (currentNode._right == null)
                 return currentNode;
-            return TreeMaximum(currentNode._right);
+            return Maximum(currentNode._right);
         }
 
         // Вставка узла
@@ -229,6 +229,7 @@ namespace Cormen.Core.Structures
             Reverse(node._left);
             Reverse(node._right);
 
+            // Обмен левой и правой ноды
             var bufferRight = node._right;
             node._right = node._left;
             node._left = bufferRight;
