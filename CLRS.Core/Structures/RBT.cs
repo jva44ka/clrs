@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Cormen.Core.Structures
+namespace CLRS.Core.Structures
 {
     public enum RBColor : byte
     {

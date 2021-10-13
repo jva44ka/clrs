@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Cormen.Core.Structures
+namespace CLRS.Core.Structures
 {
     // Простое бинарное дерево поиска
     public class BST<TKey, TValue> where TKey : class, IComparable<TKey>

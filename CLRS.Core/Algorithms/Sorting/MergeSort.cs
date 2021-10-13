@@ -1,9 +1,8 @@
-﻿using Cormen.Core.Algorithms.Sorting.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using Cormen.Core.Algorithms.Sorting.Interfaces;
 
-namespace Cormen.Core.Algorithms.Sorting
+namespace CLRS.Core.Algorithms.Sorting
 {
     // Сортировка слиянием - O(n log n)
     public class MergeSort : ISortable

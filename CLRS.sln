@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31129.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cormen.Core", "Cormen.Core\Cormen.Core.csproj", "{382AD28A-E55F-4AA0-8078-FD477D09FA1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CLRS.Core", "CLRS.Core\CLRS.Core.csproj", "{382AD28A-E55F-4AA0-8078-FD477D09FA1D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cormen.Tests", "Cormen.Tests\Cormen.Tests.csproj", "{A75971F6-830B-40A9-A04B-C971C187A3B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CLRS.Tests", "CLRS.Tests\CLRS.Tests.csproj", "{A75971F6-830B-40A9-A04B-C971C187A3B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

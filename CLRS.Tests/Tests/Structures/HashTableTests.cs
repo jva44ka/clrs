@@ -1,8 +1,8 @@
-﻿using Cormen.Core.Structures;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using CLRS.Core.Structures;
 
 namespace Cormen.Tests.Structures
 {

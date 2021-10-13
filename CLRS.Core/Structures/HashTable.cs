@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace Cormen.Core.Structures
+namespace CLRS.Core.Structures
 {
     public class HashTable<TKey, TValue>
     {

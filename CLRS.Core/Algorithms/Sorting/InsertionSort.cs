@@ -1,8 +1,8 @@
-﻿using Cormen.Core.Algorithms.Sorting.Interfaces;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Cormen.Core.Algorithms.Sorting.Interfaces;
 
-namespace Cormen.Core.Algorithms.Sorting
+namespace CLRS.Core.Algorithms.Sorting
 {
     // Сортировка вставками - O(n ^ 2)
     public class InsertionSort : ISortable

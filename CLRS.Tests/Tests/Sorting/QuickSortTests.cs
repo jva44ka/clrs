@@ -1,15 +1,15 @@
-﻿using Cormen.Core.Algorithms.Sorting;
-using Cormen.Tests.Data;
-using Cormen.Tests.Generic;
+﻿using System.Collections.Generic;
+using CLRS.Core.Algorithms.Sorting;
+using CLRS.Tests.Generators;
+using CLRS.Tests.Tests.Shared;
 using NUnit.Framework;
-using System.Collections.Generic;
 
-namespace Cormen.Tests.Sorting
+namespace CLRS.Tests.Tests.Sorting
 {
     [TestFixture(Category = "Sorting")]
     public class QuickSortTests
     {
-        private static List<List<int>> _testData = SortingData.TestData;
+        private static List<List<int>> _testData = SortingTestDataGenerator.GetTestCases();
 
         [TestCaseSource(nameof(_testData))]
         public void QuickSortInts(List<int> enumerable)

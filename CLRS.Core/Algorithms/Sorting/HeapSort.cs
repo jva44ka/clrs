@@ -1,7 +1,7 @@
-﻿using Cormen.Core.Algorithms.Sorting.Interfaces;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Cormen.Core.Algorithms.Sorting.Interfaces;
 
-namespace Cormen.Core.Algorithms.Sorting
+namespace CLRS.Core.Algorithms.Sorting
 {
     // Сортировка кучей / пирамидальная - O(n log n)
     public class HeapSort : ISortable
