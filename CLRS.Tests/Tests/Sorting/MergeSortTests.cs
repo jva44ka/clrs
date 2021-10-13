@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using CLRS.Core.Algorithms.Sorting;
 using CLRS.Tests.Generators;
-using CLRS.Tests.Tests.Shared;
 using NUnit.Framework;
 
 namespace CLRS.Tests.Tests.Sorting
@@ -14,13 +13,13 @@ namespace CLRS.Tests.Tests.Sorting
         [TestCaseSource(nameof(_testData))]
         public void MergeSortInts(List<int> enumerable)
         {
-            GenericSortTests.TestAsc(enumerable, new MergeSort().Sort);
+            SharedSortTests.TestAsc(enumerable, new MergeSort().Sort);
         }
 
         [TestCaseSource(nameof(_testData))]
         public void MergeSortInts_Desc(List<int> enumerable)
         {
-            GenericSortTests.TestDesc(enumerable, new MergeSort().SortDesc);
+            SharedSortTests.TestDesc(enumerable, new MergeSort().SortDesc);
         }
     }
 }

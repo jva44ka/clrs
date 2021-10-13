@@ -4,16 +4,10 @@ using System.Linq;
 using Cormen.Core.Algorithms.Sorting.Interfaces;
 using NUnit.Framework;
 
-namespace CLRS.Tests.Tests.Shared
+namespace CLRS.Tests.Tests.Sorting
 {
-    public class GenericSortTests
+    public class SharedSortTests
     {
-        public static void TestAll(List<int> enumerable, ISortable sortClass)
-        {
-            TestAsc(enumerable, sortClass);
-            TestDesc(enumerable, sortClass);
-        }
-
         public static void TestAsc(List<int> enumerable, Func<IList<int>, IList<int>> sortFunc)
         {
             var sortedArray = enumerable.OrderBy(x => x).ToArray();
