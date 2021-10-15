@@ -1,10 +1,8 @@
-﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using CLRS.Core.Structures;
+using NUnit.Framework;
 
-namespace Cormen.Tests.Structures
+namespace CLRS.Tests.Tests.Structures
 {
     [TestFixture(Category = "Data Structures")]
     public class RBTTests

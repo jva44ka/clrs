@@ -1,9 +1,9 @@
-﻿using NUnit.Framework;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using CLRS.Core.Structures;
+using NUnit.Framework;
 
-namespace Cormen.Tests.Structures
+namespace CLRS.Tests.Tests.Structures
 {
     [TestFixture(Category = "Data Structures")]
     public class BSTTests
