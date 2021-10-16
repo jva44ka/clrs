@@ -20,7 +20,7 @@ namespace CLRS.Tests.Tests.Structures
             tree.Insert(value3.ToString(), value3);
             tree.Insert(value1.ToString(), value1);
             tree.Insert(value2.ToString(), value2);
-            CollectionAssert.AreEqual(new List<int> { 1, 2, 3 }, tree.IncoderTreeWalk());
+            CollectionAssert.AreEqual(new List<int> { 1, 2, 3 }, tree.InOrderTreeWalk());
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace CLRS.Tests.Tests.Structures
             tree.Insert(value2.ToString(), value2);
             tree.Insert(value3.ToString(), value3);
             tree.Insert(value1.ToString(), value1);
-            CollectionAssert.AreEqual(new List<int> { 1, 2, 3 }, tree.IncoderTreeWalk());
+            CollectionAssert.AreEqual(new List<int> { 1, 2, 3 }, tree.InOrderTreeWalk());
         }
 
         [Test]
@@ -50,10 +50,10 @@ namespace CLRS.Tests.Tests.Structures
             tree.Insert(value3.ToString(), value3);
             tree.Insert(value1.ToString(), value1);
             tree.Insert(value2.ToString(), value2);
-            CollectionAssert.AreEqual(new List<int> { 1, 2, 3 }, tree.IncoderTreeWalk());
+            CollectionAssert.AreEqual(new List<int> { 1, 2, 3 }, tree.InOrderTreeWalk());
 
             tree.Delete(value2.ToString());
-            CollectionAssert.AreEqual(new List<int> { 1, 3 }, tree.IncoderTreeWalk());
+            CollectionAssert.AreEqual(new List<int> { 1, 3 }, tree.InOrderTreeWalk());
         }
 
         [Test]
@@ -68,10 +68,10 @@ namespace CLRS.Tests.Tests.Structures
             tree.Insert(value2.ToString(), value2);
             tree.Insert(value3.ToString(), value3);
             tree.Insert(value1.ToString(), value1);
-            CollectionAssert.AreEqual(new List<int> { 1, 2, 3 }, tree.IncoderTreeWalk());
+            CollectionAssert.AreEqual(new List<int> { 1, 2, 3 }, tree.InOrderTreeWalk());
 
             tree.Reverse();
-            CollectionAssert.AreEqual(new List<int> { 3, 2, 1 }, tree.IncoderTreeWalk());
+            CollectionAssert.AreEqual(new List<int> { 3, 2, 1 }, tree.InOrderTreeWalk());
         }
 
         [Test]
@@ -84,11 +84,11 @@ namespace CLRS.Tests.Tests.Structures
             foreach (var value in values)
                 tree.Insert(value.ToString(), value);
 
-            CollectionAssert.AreEqual(values.OrderBy(x => x), tree.IncoderTreeWalk());
-            var beforeReverseWalkedTree = tree.IncoderTreeWalk();
+            CollectionAssert.AreEqual(values.OrderBy(x => x), tree.InOrderTreeWalk());
+            var beforeReverseWalkedTree = tree.InOrderTreeWalk();
 
             tree.Reverse();
-            CollectionAssert.AreEqual(values.OrderByDescending(x => x), tree.IncoderTreeWalk());
+            CollectionAssert.AreEqual(values.OrderByDescending(x => x), tree.InOrderTreeWalk());
         }
     }
 }

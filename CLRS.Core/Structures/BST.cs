@@ -3,24 +3,187 @@ using System.Collections.Generic;
 
 namespace CLRS.Core.Structures
 {
+    public class BSTNode<TKey, TValue> where TKey : class, IComparable<TKey>
+    {
+        internal TKey _key;
+        internal TValue _value;
+        internal BSTNode<TKey, TValue> _parent;
+        internal BSTNode<TKey, TValue> _left;
+        internal BSTNode<TKey, TValue> _right;
+
+        public BSTNode()
+        { }
+
+        public BSTNode(BSTNode<TKey, TValue> parent, TKey key, TValue value)
+        {
+            this._parent = parent;
+            this._key = key;
+            this._value = value;
+        }
+
+        public BSTNode<TKey, TValue> Search(TKey key)
+        {
+            //TODO: Возможно убрать дополнительное сравнение т.к. ниже есть вызов CompareTo
+            if (key.Equals(this._key))
+                return this;
+
+            var compareResult = key.CompareTo(this._key);
+            if (compareResult < 0)
+                return this._left?.Search(key);
+            else
+                return this._right?.Search(key);
+
+        }
+
+        /// <summary>
+        ///     Центрированный обход дерева (LNR)
+        /// </summary>
+        /// <param name="result">Список, используемый для хранения результата обхода</param>
+        /// <returns>Возвращает отсортированный по ключу в неубывающем порядке список всех узлов</returns>
+        public List<TValue> InOrderTreeWalk(List<TValue> result = null)
+        {
+            result ??= new List<TValue>();
+            
+            this._left?.InOrderTreeWalk(result);
+            result.Add(this._value);
+            this._right?.InOrderTreeWalk(result);
+
+            return result;
+        }
+
+        /// <summary>
+        ///     Поиск рекурсивно самого левого поддерева
+        /// </summary>
+        public BSTNode<TKey, TValue> Minimum()
+        {
+            if (this._left == null)
+                return this;
+            return this._left.Minimum();
+        }
+
+        /// <summary>
+        ///     Поиск рекурсивно самого правого поддерева
+        /// </summary>
+        public BSTNode<TKey, TValue> Maximum()
+        {
+            if (this._right == null)
+                return this;
+            return this._right.Maximum();
+        }
+
+        /// <summary>
+        ///     Вставка нового узла
+        /// </summary>
+        internal void Insert(TKey key, TValue value)
+        {
+            var compareResult = key.CompareTo(this._key);
+            if (compareResult < 0)
+            {
+                if (this._left == null)
+                    this._left = new BSTNode<TKey, TValue>(this, key, value);
+                else
+                    this._left.Insert(key, value);
+            }
+            else if (compareResult > 0)
+            {
+                if (this._right == null)
+                    this._right = new BSTNode<TKey, TValue>(this, key, value);
+                else
+                    this._right.Insert(key, value);
+            }
+            else
+                throw new ArgumentException("This key already in the tree!");
+        }
+
+        /// <summary>
+        ///     Удаляет узел из дерева
+        /// </summary>
+        /// <returns>Возвращает новый корень, если ключ удаляемого узла совпадает с текущим ключем</returns>
+        internal BSTNode<TKey, TValue> Delete()
+        {
+            BSTNode<TKey, TValue> newRoot = null;
+            BSTNode<TKey, TValue> someNode = null;
+
+            if (this._left == null)
+                newRoot = Transplant(this, this._right);
+            else if (this._right == null)
+                newRoot = Transplant(this, this._left);
+            else
+            {
+                someNode = this._right.Minimum();
+                // TODO: Опасное сравнение нод через ==
+                if (someNode._parent != this)
+                {
+                    newRoot = Transplant(someNode, someNode._right);
+                    someNode._right = this._right;
+                    someNode._right._parent = someNode;
+                }
+                newRoot = Transplant(this, someNode);
+                someNode._left = this._left;
+                someNode._left._parent = someNode;
+            }
+
+            return newRoot;
+
+            /*if (this._key.CompareTo(key) == 0)
+            {
+                this._left._parent = this;
+                this._right._parent = this;
+
+                return this;
+            }
+            return null;*/
+        }
+
+        /// <summary>
+        ///     Инвертирование дерева
+        /// </summary>
+        internal void Reverse()
+        {
+            this._left?.Reverse();
+            this._right?.Reverse();
+
+            // Обмен левой и правой ноды
+            var bufferRight = this._right;
+            this._right = this._left;
+            this._left = bufferRight;
+        }
+
+        /// <summary>
+        ///     Заменяет одно дерево, которое является дочерним по отношению
+        ///     к своему родителю, другим поддеревом
+        /// </summary>
+        /// <returns>Возвращает новый корень если удаляемый узел был корневым</returns>
+        BSTNode<TKey, TValue> Transplant(BSTNode<TKey, TValue> oldNode, BSTNode<TKey, TValue> newNode)
+        {
+            BSTNode<TKey, TValue> newRoot = null;
+            if (oldNode._parent == null)
+            {
+                // У удаляемой ноды не было родителя значит она была корневой
+                // и значит новая нода тоже корневая соответственно возвращаем ее как корневую
+                newRoot = newNode;
+            }
+            else if (oldNode == oldNode._parent._left)
+                oldNode._parent._left = newNode;
+            else
+                oldNode._parent._right = newNode;
+
+            if (newNode != null) 
+                newNode._parent = oldNode._parent;
+            return newRoot;
+        }
+    }
+
     // Простое бинарное дерево поиска
     public class BST<TKey, TValue> where TKey : class, IComparable<TKey>
     {
-        protected class BSTNode
-        {
-            internal TKey _key;
-            internal TValue _value;
-            internal BSTNode _left;
-            internal BSTNode _right;
-        }
-
-        protected BSTNode _root;
+        private BSTNode<TKey, TValue> _root;
 
         public object this[TKey key]
         {
             get
             {
-                var findedNode = Search(_root, key);
+                var findedNode = _root.Search(key);
                 if (findedNode != null)
                     return findedNode._value;
                 else
@@ -28,211 +191,30 @@ namespace CLRS.Core.Structures
             }
         }
 
-        public List<TValue> IncoderTreeWalk()
+        public List<TValue> InOrderTreeWalk()
         {
-            return IncoderTreeWalk(_root, new List<TValue>());
+            return _root.InOrderTreeWalk(new List<TValue>());
         }
 
         public void Insert(TKey key, TValue value)
         {
-            Insert(ref _root, key, value);
+            _root.Insert(key, value);
         }
 
         public void Delete(TKey key)
         {
-            BSTNode findedNode = null;
-            Search(ref _root, key, ref findedNode);
-            Delete(ref findedNode);
+            var findedNode = _root.Search(key);
+            if (findedNode == null)
+                throw new ArgumentException("Node with this key not found");
+
+            var newRoot = findedNode.Delete();
+            if (newRoot != null) 
+                _root = newRoot;
         }
 
         public void Reverse()
         {
-            Reverse(_root);
-        }
-
-        List<TValue> IncoderTreeWalk(BSTNode node, List<TValue> result)
-        {
-            result ??= new List<TValue>();
-            if (node._left != null)
-                IncoderTreeWalk(node._left, result);
-
-            result.Add(node._value);
-            if (node._right != null)
-                IncoderTreeWalk(node._right, result);
-
-            return result;
-        }
-
-        BSTNode Search(BSTNode node, TKey key)
-        {
-            if (node == null)
-                throw new ArgumentException("Node with this key is not exists");
-
-            if (key.Equals(node._key))
-                return node;
-
-            var compareResult = key.CompareTo(node._key);
-            if (compareResult < 0)
-                return Search(node._left, key);
-            else
-                return Search(node._right, key);
-        }
-
-        void Search(ref BSTNode node, TKey key, ref BSTNode result)
-        {
-            if (node == null)
-                throw new ArgumentException("Node with this key is not exists");
-
-            if (key.Equals(node._key))
-            {
-                result = node;
-                return;
-            }
-
-            var compareResult = key.CompareTo(node._key);
-            if (compareResult < 0)
-                Search(ref node._left, key, ref result);
-            else
-                Search(ref node._right, key, ref result);
-        }
-
-        void DeleteFromParent(BSTNode node)
-        {
-            BSTNode parent = null;
-            FindParent(_root, node._key, ref parent);
-            
-            if (parent != null)
-            {
-                if (node.Equals(parent._left))
-                    parent._left = null;
-                else
-                    parent._right = null;
-            }
-        }
-
-        void FindParent(BSTNode node, TKey key, ref BSTNode result)
-        {
-            if (node == null)
-            {
-                result = null;
-                return;
-            }
-
-            if (key.Equals(node?._left?._key) || key.Equals(node?._right?._key))
-            {
-                result = node;
-                return;
-            }
-
-            var compareResult = key.CompareTo(node._key);
-            if (compareResult < 0)
-                FindParent(node._left, key, ref result);
-            else
-                FindParent(node._right, key, ref result);
-        }
-
-        BSTNode Minimum(BSTNode currentNode)
-        {
-            if (currentNode._left == null)
-                return currentNode;
-            return Minimum(currentNode._left);
-        }
-
-        BSTNode Maximum(BSTNode currentNode)
-        {
-            if (currentNode._right == null)
-                return currentNode;
-            return Maximum(currentNode._right);
-        }
-
-        // Вставка узла
-        void Insert(ref BSTNode node, TKey key, TValue value)
-        {
-            if (node == null)
-                node = new BSTNode 
-                { 
-                    _key = key,
-                    _value = value 
-                };
-            else
-            {
-                var compareResult = key.CompareTo(node._key);
-                if (compareResult < 0)
-                    Insert(ref node._left, key, value);
-                else if (compareResult > 0)
-                    Insert(ref node._right, key, value);
-                else
-                    throw new ArgumentException("This key already in the tree!");
-            }
-        }
-
-        // Замена поддерева
-        void Transplant(ref BSTNode oldNode, ref BSTNode newNode)
-        {
-            BSTNode oldNodeParent = null, newNodeParent = null;
-            FindParent(_root, _root._key, ref oldNodeParent);
-            FindParent(_root, _root._key, ref newNodeParent);
-
-            if (oldNodeParent == null)
-                _root = newNode;
-            else if (oldNodeParent._left.Equals(oldNode))
-                oldNodeParent._left = newNode;
-            else
-                oldNodeParent._right = newNode;
-
-            if (newNode != null)
-                newNodeParent = oldNodeParent;
-        }
-
-        // Удаление узла
-        void Delete(ref BSTNode deletingNode)
-        {
-            DeleteFromParent(deletingNode);
-
-            if (deletingNode._left == null)
-            {
-                if (deletingNode._right == null)
-                    deletingNode = null;
-                else
-                    Transplant(ref deletingNode, ref deletingNode._right);
-            }
-            else if (deletingNode._right == null)
-                Transplant(ref deletingNode, ref deletingNode._left);
-            else
-            {
-                var minNode = Minimum(deletingNode._right);
-                BSTNode minNodeParent = null;
-                FindParent(minNode, minNode._key, ref minNodeParent);
-
-                if (!minNodeParent.Equals(deletingNode))
-                {
-                    Transplant(ref minNode, ref minNode._right);
-                    minNode._right = deletingNode._right;
-                    BSTNode minNodeRightParent = null;
-                    FindParent(minNode._right, minNode._key, ref minNodeRightParent);
-                    minNodeRightParent = minNode;
-                }
-
-                Transplant(ref minNode, ref minNodeParent);
-                minNode._left = deletingNode._left;
-                BSTNode minNodeLeftParent = null;
-                FindParent(minNode._right, minNode._key, ref minNodeLeftParent);
-                minNodeLeftParent = minNode;
-            }
-        }
-
-        void Reverse(BSTNode node)
-        {
-            if (node == null)
-                return;
-
-            Reverse(node._left);
-            Reverse(node._right);
-
-            // Обмен левой и правой ноды
-            var bufferRight = node._right;
-            node._right = node._left;
-            node._left = bufferRight;
+            _root.Reverse();
         }
     }
 }
