@@ -198,7 +198,10 @@ namespace CLRS.Core.Structures
 
         public void Insert(TKey key, TValue value)
         {
-            _root.Insert(key, value);
+            if (_root == null)
+                _root = new BSTNode<TKey, TValue>(null, key, value);
+            else
+                _root.Insert(key, value);
         }
 
         public void Delete(TKey key)
