@@ -7,19 +7,16 @@ namespace CLRS.Core.Structures
     public class BSTNode<TKey, TValue> : IBinaryTreeNode<TKey, TValue>
         where TKey : class, IComparable<TKey>
     {
-        internal TKey _key;
-        internal TValue _value;
-        internal BSTNode<TKey, TValue> _parent;
-        internal BSTNode<TKey, TValue> _left;
-        internal BSTNode<TKey, TValue> _right;
+        TKey _key;
+        TValue _value;
+        BSTNode<TKey, TValue> _parent;
+        BSTNode<TKey, TValue> _left;
+        BSTNode<TKey, TValue> _right;
 
         public TKey Key => _key;
         public TValue Value => _value;
         public IBinaryTreeNode<TKey, TValue> Left => _left;
         public IBinaryTreeNode<TKey, TValue> Right => _right;
-
-        public BSTNode()
-        { }
 
         public BSTNode(BSTNode<TKey, TValue> parent, TKey key, TValue value)
         {
@@ -186,7 +183,7 @@ namespace CLRS.Core.Structures
             {
                 var findedNode = _root.Search(key);
                 if (findedNode != null)
-                    return findedNode._value;
+                    return findedNode.Value;
                 return null;
             }
         }
