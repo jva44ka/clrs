@@ -47,10 +47,17 @@ namespace CLRS.Tests.Stubs
             if (!_value.Equals(compareNode.Value)) 
                 return false;
 
+            //TODO: Отрефакторить это место с учетом того, что левая или правая поднода могут быть null
+            //      При этом Equals нужно вызывать на объекте BinaryTreeNodeStub<>
+
             // Если сравнение успешно идем рекурсивно вниз
-            if (!_left.Equals(compareNode.Left))
+            if (_left == null && compareNode.Left != null
+                || _left != null && compareNode.Left == null
+                || (!_left?.Equals(compareNode.Left) ?? false))
                 return false;
-            if (!_right.Equals(compareNode.Right))
+            if (_right == null && compareNode.Right != null
+                || _right != null && compareNode.Right == null
+                || (!_right?.Equals(compareNode.Right) ?? false))
                 return false;
 
             return true;
