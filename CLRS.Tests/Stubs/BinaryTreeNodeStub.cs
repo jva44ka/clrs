@@ -1,5 +1,6 @@
 ﻿using System;
 using CLRS.Core.Structures;
+using CLRS.Core.Structures.Interfaces;
 
 namespace CLRS.Tests.Stubs
 {
@@ -19,6 +20,9 @@ namespace CLRS.Tests.Stubs
         public IBinaryTreeNode<TKey, TValue> Left => _left;
         public IBinaryTreeNode<TKey, TValue> Right => _right;
 
+        public BinaryTreeNodeStub()
+        {}
+        
         public BinaryTreeNodeStub(TKey key, TValue value)
         {
             _key = key;
@@ -38,18 +42,26 @@ namespace CLRS.Tests.Stubs
         public bool Equals(IBinaryTreeNode<TKey, TValue> compareNode)
         {
             // Сравниваем текущую ноду
-            if (!compareNode.Key.Equals(_key)) 
+            if (!_key.Equals(compareNode.Key)) 
                 return false;
-            if (!compareNode.Value.Equals(_value)) 
+            if (!_value.Equals(compareNode.Value)) 
                 return false;
 
             // Если сравнение успешно идем рекурсивно вниз
-            if (!compareNode.Left.Equals(_left))
+            if (!_left.Equals(compareNode.Left))
                 return false;
-            if (!compareNode.Right.Equals(_right))
+            if (!_right.Equals(compareNode.Right))
                 return false;
 
             return true;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is IBinaryTreeNode<TKey, TValue>)
+                return Equals(obj as IBinaryTreeNode<TKey, TValue>);
+
+            return base.Equals(obj);
         }
     }
 }

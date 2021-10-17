@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using CLRS.Core.Structures;
+using CLRS.Tests.Stubs;
 using NUnit.Framework;
 
 namespace CLRS.Tests.Tests.Structures
@@ -8,19 +9,25 @@ namespace CLRS.Tests.Tests.Structures
     [TestFixture(Category = "Data Structures")]
     public class BSTTests
     {
+        private readonly int _value1 = 1;
+        private readonly int _value2 = 2;
+        private readonly int _value3 = 3;
+
         [Test]
         public void Add321()
         {
-            var value1 = 1;
-            var value2 = 2;
-            var value3 = 3;
+            //Arrange
+            var actualTree = new BST<string, int>();
+            actualTree.Insert(_value3.ToString(), _value3);
+            actualTree.Insert(_value1.ToString(), _value1);
+            actualTree.Insert(_value2.ToString(), _value2);
 
-            var tree = new BST<string, int>();
-            
-            tree.Insert(value3.ToString(), value3);
-            tree.Insert(value1.ToString(), value1);
-            tree.Insert(value2.ToString(), value2);
-            CollectionAssert.AreEqual(new List<int> { 1, 2, 3 }, tree.InOrderTreeWalk());
+            var expectedTree = new BinaryTreeNodeStub<string, int>(_value3.ToString(), _value3);
+            expectedTree.SetLeftNode(_value1.ToString(), _value1);
+            (expectedTree.Left as BinaryTreeNodeStub<string, int>).SetRightNode(_value2.ToString(), _value2);
+
+            //Assert
+            Assert.AreEqual(expectedTree, actualTree.Root);
         }
 
         [Test]
@@ -85,7 +92,6 @@ namespace CLRS.Tests.Tests.Structures
                 tree.Insert(value.ToString(), value);
 
             CollectionAssert.AreEqual(values.OrderBy(x => x), tree.InOrderTreeWalk());
-            var beforeReverseWalkedTree = tree.InOrderTreeWalk();
 
             tree.Reverse();
             CollectionAssert.AreEqual(values.OrderByDescending(x => x), tree.InOrderTreeWalk());

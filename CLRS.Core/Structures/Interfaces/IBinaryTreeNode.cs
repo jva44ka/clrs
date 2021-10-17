@@ -1,4 +1,4 @@
-﻿namespace CLRS.Core.Structures
+﻿namespace CLRS.Core.Structures.Interfaces
 {
     public interface IBinaryTreeNode<TKey, TValue>
     {

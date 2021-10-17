@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CLRS.Core.Structures.Interfaces;
 
 namespace CLRS.Core.Structures
 {
@@ -199,11 +200,18 @@ namespace CLRS.Core.Structures
             }
         }
 
+        /// <summary>
+        ///     Центрированный обход дерева (LNR)
+        /// </summary>
+        /// <returns>Возвращает отсортированный по ключу в неубывающем порядке список всех узлов</returns>
         public List<TValue> InOrderTreeWalk()
         {
             return _root.InOrderTreeWalk(new List<TValue>());
         }
 
+        /// <summary>
+        ///     Вставка нового узла с заданными ключем и значением
+        /// </summary>
         public void Insert(TKey key, TValue value)
         {
             if (_root == null)
@@ -212,6 +220,9 @@ namespace CLRS.Core.Structures
                 _root.Insert(key, value);
         }
 
+        /// <summary>
+        ///     Удаление узла из дерева
+        /// </summary>
         public void Delete(TKey key)
         {
             var findedNode = _root.Search(key);
@@ -223,6 +234,9 @@ namespace CLRS.Core.Structures
                 _root = newRoot;
         }
 
+        /// <summary>
+        ///     Инвертирование дерева
+        /// </summary>
         public void Reverse()
         {
             _root.Reverse();
