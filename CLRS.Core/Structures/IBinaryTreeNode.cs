@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CLRS.Core.Structures
+﻿namespace CLRS.Core.Structures
 {
-    interface IBinaryTreeNode<TNodeType>
+    public interface IBinaryTreeNode<TKey, TValue>
     {
-        TNodeType Left { get; }
-        TNodeType Right { get; }
+        TKey Key { get; }
+        TValue Value { get; }
+        IBinaryTreeNode<TKey, TValue> Left { get; }
+        IBinaryTreeNode<TKey, TValue> Right { get; }
     }
 }

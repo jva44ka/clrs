@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 namespace CLRS.Core.Structures
 {
-    public class BSTNode<TKey, TValue> where TKey : class, IComparable<TKey>
+    public class BSTNode<TKey, TValue> : IBinaryTreeNode<TKey, TValue>
+        where TKey : class, IComparable<TKey>
     {
         internal TKey _key;
         internal TValue _value;
@@ -11,27 +12,31 @@ namespace CLRS.Core.Structures
         internal BSTNode<TKey, TValue> _left;
         internal BSTNode<TKey, TValue> _right;
 
+        public TKey Key => _key;
+        public TValue Value => _value;
+        public IBinaryTreeNode<TKey, TValue> Left => _left;
+        public IBinaryTreeNode<TKey, TValue> Right => _right;
+
         public BSTNode()
         { }
 
         public BSTNode(BSTNode<TKey, TValue> parent, TKey key, TValue value)
         {
-            this._parent = parent;
-            this._key = key;
-            this._value = value;
+            _parent = parent;
+            _key = key;
+            _value = value;
         }
 
         public BSTNode<TKey, TValue> Search(TKey key)
         {
             //TODO: Возможно убрать дополнительное сравнение т.к. ниже есть вызов CompareTo
-            if (key.Equals(this._key))
+            if (key.Equals(_key))
                 return this;
 
-            var compareResult = key.CompareTo(this._key);
+            var compareResult = key.CompareTo(_key);
             if (compareResult < 0)
-                return this._left?.Search(key);
-            else
-                return this._right?.Search(key);
+                return _left?.Search(key);
+            return _right?.Search(key);
 
         }
 
@@ -44,9 +49,9 @@ namespace CLRS.Core.Structures
         {
             result ??= new List<TValue>();
             
-            this._left?.InOrderTreeWalk(result);
-            result.Add(this._value);
-            this._right?.InOrderTreeWalk(result);
+            _left?.InOrderTreeWalk(result);
+            result.Add(_value);
+            _right?.InOrderTreeWalk(result);
 
             return result;
         }
@@ -56,9 +61,9 @@ namespace CLRS.Core.Structures
         /// </summary>
         public BSTNode<TKey, TValue> Minimum()
         {
-            if (this._left == null)
+            if (_left == null)
                 return this;
-            return this._left.Minimum();
+            return _left.Minimum();
         }
 
         /// <summary>
@@ -66,9 +71,9 @@ namespace CLRS.Core.Structures
         /// </summary>
         public BSTNode<TKey, TValue> Maximum()
         {
-            if (this._right == null)
+            if (_right == null)
                 return this;
-            return this._right.Maximum();
+            return _right.Maximum();
         }
 
         /// <summary>
@@ -76,20 +81,20 @@ namespace CLRS.Core.Structures
         /// </summary>
         internal void Insert(TKey key, TValue value)
         {
-            var compareResult = key.CompareTo(this._key);
+            var compareResult = key.CompareTo(_key);
             if (compareResult < 0)
             {
-                if (this._left == null)
-                    this._left = new BSTNode<TKey, TValue>(this, key, value);
+                if (_left == null)
+                    _left = new BSTNode<TKey, TValue>(this, key, value);
                 else
-                    this._left.Insert(key, value);
+                    _left.Insert(key, value);
             }
             else if (compareResult > 0)
             {
-                if (this._right == null)
-                    this._right = new BSTNode<TKey, TValue>(this, key, value);
+                if (_right == null)
+                    _right = new BSTNode<TKey, TValue>(this, key, value);
                 else
-                    this._right.Insert(key, value);
+                    _right.Insert(key, value);
             }
             else
                 throw new ArgumentException("This key already in the tree!");
@@ -104,22 +109,22 @@ namespace CLRS.Core.Structures
             BSTNode<TKey, TValue> newRoot = null;
             BSTNode<TKey, TValue> someNode = null;
 
-            if (this._left == null)
-                newRoot = Transplant(this, this._right);
-            else if (this._right == null)
-                newRoot = Transplant(this, this._left);
+            if (_left == null)
+                newRoot = Transplant(this, _right);
+            else if (_right == null)
+                newRoot = Transplant(this, _left);
             else
             {
-                someNode = this._right.Minimum();
+                someNode = _right.Minimum();
                 // TODO: Опасное сравнение нод через ==
                 if (someNode._parent != this)
                 {
                     newRoot = Transplant(someNode, someNode._right);
-                    someNode._right = this._right;
+                    someNode._right = _right;
                     someNode._right._parent = someNode;
                 }
                 newRoot = Transplant(this, someNode);
-                someNode._left = this._left;
+                someNode._left = _left;
                 someNode._left._parent = someNode;
             }
 
@@ -140,13 +145,13 @@ namespace CLRS.Core.Structures
         /// </summary>
         internal void Reverse()
         {
-            this._left?.Reverse();
-            this._right?.Reverse();
+            _left?.Reverse();
+            _right?.Reverse();
 
             // Обмен левой и правой ноды
-            var bufferRight = this._right;
-            this._right = this._left;
-            this._left = bufferRight;
+            var bufferRight = _right;
+            _right = _left;
+            _left = bufferRight;
         }
 
         /// <summary>
@@ -174,10 +179,14 @@ namespace CLRS.Core.Structures
         }
     }
 
-    // Простое бинарное дерево поиска
+    /// <summary>
+    ///     Простое бинарное дерево поиска (Binary Search Tree | BST)
+    /// </summary>
     public class BST<TKey, TValue> where TKey : class, IComparable<TKey>
     {
         private BSTNode<TKey, TValue> _root;
+
+        public BSTNode<TKey, TValue> Root => _root;
 
         public object this[TKey key]
         {
@@ -186,8 +195,7 @@ namespace CLRS.Core.Structures
                 var findedNode = _root.Search(key);
                 if (findedNode != null)
                     return findedNode._value;
-                else
-                    return null;
+                return null;
             }
         }
 
