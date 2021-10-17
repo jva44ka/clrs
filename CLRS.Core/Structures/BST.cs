@@ -198,6 +198,22 @@ namespace CLRS.Core.Structures
         }
 
         /// <summary>
+        ///     Поиск рекурсивно самого левого поддерева
+        /// </summary>
+        public BSTNode<TKey, TValue> Minimum()
+        {
+            return _root.Minimum();
+        }
+
+        /// <summary>
+        ///     Поиск рекурсивно самого правого поддерева
+        /// </summary>
+        public BSTNode<TKey, TValue> Maximum()
+        {
+            return _root.Maximum();
+        }
+
+        /// <summary>
         ///     Вставка нового узла с заданными ключем и значением
         /// </summary>
         public void Insert(TKey key, TValue value)
