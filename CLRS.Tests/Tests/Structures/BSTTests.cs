@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using CLRS.Core.Structures;
+using CLRS.Tests.Generators;
 using CLRS.Tests.Stubs;
 using NUnit.Framework;
 
@@ -23,8 +24,9 @@ namespace CLRS.Tests.Tests.Structures
             actualTree.Insert(_value2.ToString(), _value2);
 
             var expectedTree = new BinaryTreeNodeStub<string, int>(_value3.ToString(), _value3);
-            expectedTree.SetLeftNode(_value1.ToString(), _value1);
-            (expectedTree.Left as BinaryTreeNodeStub<string, int>).SetRightNode(_value2.ToString(), _value2);
+            expectedTree.WithLeftNode(_value1.ToString(), _value1)
+                        .ToLeftNode()
+                        .WithRightNode(_value2.ToString(), _value2);
 
             //Assert
             Assert.AreEqual(expectedTree, actualTree.Root);
