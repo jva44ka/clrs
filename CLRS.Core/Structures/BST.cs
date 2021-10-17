@@ -130,15 +130,6 @@ namespace CLRS.Core.Structures
             }
 
             return newRoot;
-
-            /*if (this._key.CompareTo(key) == 0)
-            {
-                this._left._parent = this;
-                this._right._parent = this;
-
-                return this;
-            }
-            return null;*/
         }
 
         /// <summary>
