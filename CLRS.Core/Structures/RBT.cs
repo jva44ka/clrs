@@ -79,11 +79,6 @@ namespace CLRS.Core.Structures
 
             return result;
         }
-
-        public override string ToString()
-        {
-            return _key.ToString();
-        }
     }
 
     public class RBT<TKey, TValue> where TKey : class, IComparable<TKey>
@@ -296,7 +291,8 @@ namespace CLRS.Core.Structures
             }
             else
             {
-                y = _root.Minimum(_root);
+                y = _root.Minimum(deletingNode._right);
+                yOriginalColor = y._color;
                 x = y._right;
                 if (y._parent == deletingNode)
                     x._parent = y;

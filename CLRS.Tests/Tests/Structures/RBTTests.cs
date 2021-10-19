@@ -86,5 +86,24 @@ namespace CLRS.Tests.Tests.Structures
             //Assert
             Assert.AreEqual(expectedTree, actualTree.Root);
         }
+        
+        [Test]
+        public void Delete_ByKey2RootWith123Tree_ShouldBe13Tree()
+        {
+            //Arrange
+            var actualTree = new RBT<string, int>();
+            actualTree.Insert(_value3.ToString(), _value3);
+            actualTree.Insert(_value1.ToString(), _value1);
+            actualTree.Insert(_value2.ToString(), _value2);
+            var expectedTree = BinaryTreeStubGenerator.New(_value3.ToString(), _value3)
+                                                      .WithLeftNode(_value1.ToString(), _value1)
+                                                      .WithEnrichNilNodes();
+
+            //Act
+            actualTree.Delete(_value2.ToString());
+
+            //Assert
+            Assert.AreEqual(expectedTree, actualTree.Root);
+        }
     }
 }
