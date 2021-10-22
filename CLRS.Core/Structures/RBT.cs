@@ -15,12 +15,12 @@ namespace CLRS.Core.Structures
     {
         public static RBTNode<TKey, TValue> Nil { get; } = new RBTNode<TKey, TValue> { _color = RBColor.Black };
 
-        internal TKey _key;
-        internal TValue _value;
-        internal RBTNode<TKey, TValue> _left;
-        internal RBTNode<TKey, TValue> _right;
-        internal RBTNode<TKey, TValue> _parent;
-        internal RBColor _color;
+        TKey _key;
+        TValue _value;
+        RBTNode<TKey, TValue> _left;
+        RBTNode<TKey, TValue> _right;
+        RBTNode<TKey, TValue> _parent;
+        RBColor _color;
 
         public TKey Key => _key;
         public TValue Value => _value;
@@ -35,6 +35,8 @@ namespace CLRS.Core.Structures
             _key = key;
             _value = value;
         }
+
+        #region public
 
         /// <summary>
         ///     Черная высота - количество черных узлов от текущей ноды до корня без учета Nil-узлов
@@ -190,6 +192,10 @@ namespace CLRS.Core.Structures
 
         }
 
+        #endregion
+
+        #region private
+
         /// <summary>
         ///     Левый поворот, при котором правое поддерево становится главенствующим
         /// </summary>
@@ -329,8 +335,8 @@ namespace CLRS.Core.Structures
         /// <param name="oldNode"></param>
         /// <param name="newNode"></param>
         private void Transplant(RBT<TKey, TValue> tree, 
-                                RBTNode<TKey, TValue> oldNode,
-                                RBTNode<TKey, TValue> newNode)
+            RBTNode<TKey, TValue> oldNode,
+            RBTNode<TKey, TValue> newNode)
         {
             if (oldNode._parent == Nil)
                 tree._root = newNode;
@@ -418,6 +424,8 @@ namespace CLRS.Core.Structures
 
             node._color = RBColor.Black;
         }
+
+        #endregion
     }
 
     public class RBT<TKey, TValue> where TKey : class, IComparable<TKey>
@@ -431,16 +439,56 @@ namespace CLRS.Core.Structures
             _root = RBTNode<TKey, TValue>.Nil;
         }
 
+        public object this[TKey key]
+        {
+            get
+            {
+                var findedNode = _root.Search(key);
+                if (findedNode != null)
+                    return findedNode.Value;
+                return null;
+            }
+        }
+
+        /// <summary>
+        ///     Центрированный обход дерева (LNR)
+        /// </summary>
+        /// <returns>Возвращает отсортированный по ключу в неубывающем порядке список всех узлов</returns>
         public List<TValue> InOrderTreeWalk()
         {
             return _root.InOrderTreeWalk(new List<TValue>());
         }
 
+        /// <summary>
+        ///     Поиск рекурсивно самого левого поддерева
+        /// </summary>
+        public RBTNode<TKey, TValue> Minimum()
+        {
+            return _root.Minimum();
+        }
+        
+        /// <summary>
+        ///     Поиск рекурсивно самого правого поддерева
+        /// </summary>
+        public RBTNode<TKey, TValue> Maximum()
+        {
+            return _root.Maximum();
+        }
+
+        /// <summary>
+        ///     Вставка нового узла в дерево
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         public void Insert(TKey key, TValue value)
         {
             _root.Insert(new RBTNode<TKey, TValue>(key, value), this);
         }
 
+        /// <summary>
+        ///     Удаление узла из дерева
+        /// </summary>
+        /// <param name="key"></param>
         public void Delete(TKey key)
         {
             var findedNode = _root.Search(key);
