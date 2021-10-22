@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CLRS.Core.Structures.Interfaces;
 
 namespace CLRS.Core.Structures
 {
@@ -9,128 +10,132 @@ namespace CLRS.Core.Structures
         Black = 1
     }
 
-    public class RBTNode<TKey, TValue> where TKey : class, IComparable<TKey>
+    public class RBTNode<TKey, TValue> : IBinaryTreeNode<TKey, TValue>
+        where TKey : class, IComparable<TKey>
     {
-        internal static RBTNode<TKey, TValue> nil = new RBTNode<TKey, TValue> { color = RBColor.Black };
-        internal TKey key;
-        internal TValue value;
-        internal RBTNode<TKey, TValue> left;
-        internal RBTNode<TKey, TValue> right;
-        internal RBTNode<TKey, TValue> parent;
-        internal RBColor color;
+        public static RBTNode<TKey, TValue> Nil { get; } = new RBTNode<TKey, TValue> { _color = RBColor.Black };
+
+        internal TKey _key;
+        internal TValue _value;
+        internal RBTNode<TKey, TValue> _left;
+        internal RBTNode<TKey, TValue> _right;
+        internal RBTNode<TKey, TValue> _parent;
+        internal RBColor _color;
+
+        public TKey Key => _key;
+        public TValue Value => _value;
+        public IBinaryTreeNode<TKey, TValue> Left => _left;
+        public IBinaryTreeNode<TKey, TValue> Right => _right;
 
         internal int BlackHeight(RBTNode<TKey, TValue> node, int height)
         {
-            if (node.color == RBColor.Black && node != RBTNode<TKey, TValue>.nil)
+            if (node._color == RBColor.Black && node != Nil)
                 height++;
 
-            if (node.parent != null)
-                return BlackHeight(node.parent, height);
+            if (node._parent != null)
+                return BlackHeight(node._parent, height);
             else
                 return height;
         }
 
         internal RBTNode<TKey, TValue> Search(RBTNode<TKey, TValue> node, TKey key)
         {
-            if (node == RBTNode<TKey, TValue>.nil)
+            if (node == Nil)
                 throw new ArgumentException("Node with this key is not exists");
 
-            if (key.Equals(node.key))
+            if (key.Equals(node._key))
                 return node;
 
-            var compareResult = key.CompareTo(node.key);
+            var compareResult = key.CompareTo(node._key);
             if (compareResult < 0)
-                return Search(node.left, key);
+                return Search(node._left, key);
             else
-                return Search(node.right, key);
+                return Search(node._right, key);
         }
 
         internal RBTNode<TKey, TValue> Minimum(RBTNode<TKey, TValue> node)
         {
-            if (node.left == RBTNode<TKey, TValue>.nil)
+            if (node._left == Nil)
                 return node;
-            return Minimum(node.left);
+            return Minimum(node._left);
         }
 
         internal RBTNode<TKey, TValue> Maximum(RBTNode<TKey, TValue> node)
         {
-            if (node.right == RBTNode<TKey, TValue>.nil)
+            if (node._right == Nil)
                 return node;
-            return Maximum(node.right);
+            return Maximum(node._right);
         }
 
-        internal List<TValue> IncoderTreeWalk(RBTNode<TKey, TValue> node, List<TValue> result)
+        internal List<TValue> InOrderTreeWalk(RBTNode<TKey, TValue> node, List<TValue> result)
         {
             result ??= new List<TValue>();
-            if (node.left != RBTNode<TKey, TValue>.nil)
-                IncoderTreeWalk(node.left, result);
+            if (node._left != Nil)
+                InOrderTreeWalk(node._left, result);
 
-            result.Add(node.value);
-            if (node.right != RBTNode<TKey, TValue>.nil)
-                IncoderTreeWalk(node.right, result);
+            result.Add(node._value);
+            if (node._right != Nil)
+                InOrderTreeWalk(node._right, result);
 
             return result;
-        }
-
-        public override string ToString()
-        {
-            return key.ToString();
         }
     }
 
     public class RBT<TKey, TValue> where TKey : class, IComparable<TKey>
     {
-        public RBTNode<TKey, TValue> root;
+        public RBTNode<TKey, TValue> _root;
+
+        public RBTNode<TKey, TValue> Root => _root;
 
         public RBT()
         {
-            root = RBTNode<TKey, TValue>.nil;
+            _root = RBTNode<TKey, TValue>.Nil;
         }
 
-        public List<TValue> IncoderTreeWalk()
+        public List<TValue> InOrderTreeWalk()
         {
-            return root.IncoderTreeWalk(root, new List<TValue>());
+            return _root.InOrderTreeWalk(_root, new List<TValue>());
         }
 
         public void Insert(TKey key, TValue value)
         {
             Insert(new RBTNode<TKey, TValue> 
             { 
-                key = key,
-                value = value
+                _key = key,
+                _value = value
             });
         }
 
         public void Delete(TKey key)
         {
-            var findedNode = root.Search(root, key);
+            var findedNode = _root.Search(_root, key);
             Delete(findedNode);
         }
 
         private RBTNode<TKey, TValue> LeftRotate(RBTNode<TKey, TValue> node)
         {
             // Сохранение правого поддерева node
-            var newRoot = node.right;
+            var newRoot = node._right;
 
             // Превращение левого поддерева newRoot в правое поддерево node
-            node.right = newRoot.left;
+            node._right = newRoot._left;
 
-            if (newRoot.left != RBTNode<TKey, TValue>.nil)
-                newRoot.left.parent = node;
+            if (newRoot._left != RBTNode<TKey, TValue>.Nil)
+                newRoot._left._parent = node;
 
             // Передача родителя node узлу newRoot
-            newRoot.parent = node.parent;
-            if (node.parent == RBTNode<TKey, TValue>.nil)
-                root = newRoot;
-            else if (node == node.parent.left)
-                node.parent.left = newRoot;
+            newRoot._parent = node._parent;
+            if (node._parent == RBTNode<TKey, TValue>.Nil)
+                _root = newRoot;
+            else if (node == node._parent._left)
+                node._parent._left = newRoot;
             else
-                node.parent.right = newRoot;
+                node._parent._right = newRoot;
 
             // Размещение node в качестве левого дочернего узла newRoot
-            newRoot.left = node;
+            newRoot._left = node;
 
-            node.parent = newRoot;
+            node._parent = newRoot;
 
             return newRoot;
         }
@@ -138,168 +143,169 @@ namespace CLRS.Core.Structures
         private RBTNode<TKey, TValue> RightRotate(RBTNode<TKey, TValue> node)
         {
             // Сохранение левого поддерева node
-            var newRoot = node.left;
+            var newRoot = node._left;
 
             // Превращение правого поддерева newRoot в левое поддерево node
-            node.left = newRoot.right;
+            node._left = newRoot._right;
 
-            if (newRoot.right != RBTNode<TKey, TValue>.nil)
-                newRoot.right.parent = node;
+            if (newRoot._right != RBTNode<TKey, TValue>.Nil)
+                newRoot._right._parent = node;
 
             // Передача родителя node узлу newRoot
-            newRoot.parent = node.parent;
-            if (node.parent == RBTNode<TKey, TValue>.nil)
-                root = newRoot;
-            else if (node == node.parent.right)
-                node.parent.right = newRoot;
+            newRoot._parent = node._parent;
+            if (node._parent == RBTNode<TKey, TValue>.Nil)
+                _root = newRoot;
+            else if (node == node._parent._right)
+                node._parent._right = newRoot;
             else
-                node.parent.left = newRoot;
+                node._parent._left = newRoot;
 
             // Размещение node в качестве правого дочернего узла newRoot
-            newRoot.right = node;
+            newRoot._right = node;
 
-            node.parent = newRoot;
+            node._parent = newRoot;
 
             return newRoot;
         }
 
         private void Insert(RBTNode<TKey, TValue> newNode)
         {
-            var y = RBTNode<TKey, TValue>.nil;
-            var x = root;
+            var y = RBTNode<TKey, TValue>.Nil;
+            var x = _root;
             int compareResult;
 
-            while (x != RBTNode<TKey, TValue>.nil)
+            while (x != RBTNode<TKey, TValue>.Nil)
             {
                 y = x;
-                compareResult = newNode.key.CompareTo(x.key);
+                compareResult = newNode._key.CompareTo(x._key);
                 if (compareResult < 0)
-                    x = x.left;
+                    x = x._left;
                 else
-                    x = x.right;
+                    x = x._right;
             }
 
-            newNode.parent = y;
-            compareResult = newNode.key.CompareTo(y.key);
-            if (y == RBTNode<TKey, TValue>.nil)
-                root = newNode;
+            newNode._parent = y;
+            compareResult = newNode._key.CompareTo(y._key);
+            if (y == RBTNode<TKey, TValue>.Nil)
+                _root = newNode;
             else if (compareResult < 0)
-                y.left = newNode;
+                y._left = newNode;
             else
-                y.right = newNode;
+                y._right = newNode;
 
-            newNode.left = RBTNode<TKey, TValue>.nil;
-            newNode.right = RBTNode<TKey, TValue>.nil;
-            newNode.color = RBColor.Red;
+            newNode._left = RBTNode<TKey, TValue>.Nil;
+            newNode._right = RBTNode<TKey, TValue>.Nil;
+            newNode._color = RBColor.Red;
             InsertFixup(newNode);
         }
 
         // Восстановление свойств красного дерева после вставки
         private void InsertFixup(RBTNode<TKey, TValue> newNode)
         {
-            if (newNode.parent == RBTNode<TKey, TValue>.nil)
+            if (newNode._parent == RBTNode<TKey, TValue>.Nil)
             {
-                newNode.color = RBColor.Black;
+                newNode._color = RBColor.Black;
                 return;
             }
-            else if (newNode.parent.parent == RBTNode<TKey, TValue>.nil)
+            else if (newNode._parent._parent == RBTNode<TKey, TValue>.Nil)
                 return;
 
-            while (newNode.parent.color == RBColor.Red)
+            while (newNode._parent._color == RBColor.Red)
             {
-                if (newNode.parent == newNode.parent.parent.left)
+                if (newNode._parent == newNode._parent._parent._left)
                 {
-                    var y = newNode.parent.parent.right;
-                    if (y.color == RBColor.Red)
+                    var y = newNode._parent._parent._right;
+                    if (y._color == RBColor.Red)
                     {
-                        newNode.parent.color = RBColor.Black;       // Случай 1
-                        y.color = RBColor.Black;                    // Случай 1
-                        newNode.parent.parent.color = RBColor.Red;  // Случай 1
-                        newNode = newNode.parent.parent;            // Случай 1
+                        newNode._parent._color = RBColor.Black;       // Случай 1
+                        y._color = RBColor.Black;                    // Случай 1
+                        newNode._parent._parent._color = RBColor.Red;  // Случай 1
+                        newNode = newNode._parent._parent;            // Случай 1
                     }
                     else
                     {
-                        if (newNode == newNode.parent.right)
+                        if (newNode == newNode._parent._right)
                         {
-                            newNode = newNode.parent;               // Случай 2
+                            newNode = newNode._parent;               // Случай 2
                             LeftRotate(newNode);                    // Случай 2
                         }
-                        newNode.parent.color = RBColor.Black;       // Случай 3
-                        newNode.parent.parent.color = RBColor.Red;  // Случай 3
-                        RightRotate(newNode.parent.parent);         // Случай 3
+                        newNode._parent._color = RBColor.Black;       // Случай 3
+                        newNode._parent._parent._color = RBColor.Red;  // Случай 3
+                        RightRotate(newNode._parent._parent);         // Случай 3
                     }
                 }
                 else
                 {
                     var height = newNode.BlackHeight(newNode, 0);
-                    var y = newNode.parent.parent.left;
-                    if (y.color == RBColor.Red)
+                    var y = newNode._parent._parent._left;
+                    if (y._color == RBColor.Red)
                     {
-                        newNode.parent.color = RBColor.Black;       // Случай 4
-                        y.color = RBColor.Black;                    // Случай 4
-                        newNode.parent.parent.color = RBColor.Red;  // Случай 4
-                        newNode = newNode.parent.parent;            // Случай 4
+                        newNode._parent._color = RBColor.Black;       // Случай 4
+                        y._color = RBColor.Black;                    // Случай 4
+                        newNode._parent._parent._color = RBColor.Red;  // Случай 4
+                        newNode = newNode._parent._parent;            // Случай 4
                     }
                     else
                     {
-                        if (newNode == newNode.parent.left)
+                        if (newNode == newNode._parent._left)
                         {
-                            newNode = newNode.parent;               // Случай 5
+                            newNode = newNode._parent;               // Случай 5
                             RightRotate(newNode);                   // Случай 5
                         }
-                        newNode.parent.color = RBColor.Black;       // Случай 6
-                        newNode.parent.parent.color = RBColor.Red;  // Случай 6
-                        LeftRotate(newNode.parent.parent);          // Случай 6
+                        newNode._parent._color = RBColor.Black;       // Случай 6
+                        newNode._parent._parent._color = RBColor.Red;  // Случай 6
+                        LeftRotate(newNode._parent._parent);          // Случай 6
                     }
                 }
             }
 
-            root.color = RBColor.Black;
+            _root._color = RBColor.Black;
         }
 
         private void Transplant(RBTNode<TKey, TValue> oldNode, RBTNode<TKey, TValue> newNode)
         {
-            if (oldNode.parent == RBTNode<TKey, TValue>.nil)
-                root = newNode;
-            else if (oldNode == oldNode.parent.left)
-                oldNode.parent.left = newNode;
+            if (oldNode._parent == RBTNode<TKey, TValue>.Nil)
+                _root = newNode;
+            else if (oldNode == oldNode._parent._left)
+                oldNode._parent._left = newNode;
             else
-                oldNode.parent.right = newNode;
-            newNode.parent = oldNode.parent;
+                oldNode._parent._right = newNode;
+            newNode._parent = oldNode._parent;
         }
 
         private void Delete(RBTNode<TKey, TValue> deletingNode)
         {
             var y = deletingNode;
-            var yOriginalColor = y.color;
+            var yOriginalColor = y._color;
             RBTNode<TKey, TValue> x;
 
-            if (deletingNode.left == RBTNode<TKey, TValue>.nil)
+            if (deletingNode._left == RBTNode<TKey, TValue>.Nil)
             {
-                x = deletingNode.right;
-                Transplant(deletingNode, deletingNode.right);
+                x = deletingNode._right;
+                Transplant(deletingNode, deletingNode._right);
             }
-            else if (deletingNode.right == RBTNode<TKey, TValue>.nil)
+            else if (deletingNode._right == RBTNode<TKey, TValue>.Nil)
             {
-                x = deletingNode.left;
-                Transplant(deletingNode, deletingNode.left);
+                x = deletingNode._left;
+                Transplant(deletingNode, deletingNode._left);
             }
             else
             {
-                y = root.Minimum(root);
-                x = y.right;
-                if (y.parent == deletingNode)
-                    x.parent = y;
+                y = _root.Minimum(deletingNode._right);
+                yOriginalColor = y._color;
+                x = y._right;
+                if (y._parent == deletingNode)
+                    x._parent = y;
                 else
                 {
-                    Transplant(y, y.right);
-                    y.right = deletingNode.right;
-                    y.right.parent = y;
+                    Transplant(y, y._right);
+                    y._right = deletingNode._right;
+                    y._right._parent = y;
                 }
                 Transplant(deletingNode, y);
-                y.left = deletingNode.left;
-                y.left.parent = y;
-                y.color = deletingNode.color;
+                y._left = deletingNode._left;
+                y._left._parent = y;
+                y._color = deletingNode._color;
             }
 
             if (yOriginalColor == RBColor.Black)
@@ -309,75 +315,75 @@ namespace CLRS.Core.Structures
 
         private void DeleteFixup(RBTNode<TKey, TValue> node)
         {
-            RBTNode<TKey, TValue> w = RBTNode<TKey, TValue>.nil;
+            RBTNode<TKey, TValue> w = RBTNode<TKey, TValue>.Nil;
 
-            while (node != root && node.color == RBColor.Black)
+            while (node != _root && node._color == RBColor.Black)
             {
-                if (node == node.parent.left)
+                if (node == node._parent._left)
                 {
-                    w = node.parent.right;
-                    if (w.color == RBColor.Red)
+                    w = node._parent._right;
+                    if (w._color == RBColor.Red)
                     {
-                        w.color = RBColor.Black;            // Случай 1
-                        node.parent.color = RBColor.Red;    // Случай 1
-                        LeftRotate(node.parent);            // Случай 1
-                        w = node.parent.right;              // Случай 1
+                        w._color = RBColor.Black;            // Случай 1
+                        node._parent._color = RBColor.Red;    // Случай 1
+                        LeftRotate(node._parent);            // Случай 1
+                        w = node._parent._right;              // Случай 1
                     }
-                    if (w.left.color == RBColor.Black && w.right.color == RBColor.Black)
+                    if (w._left._color == RBColor.Black && w._right._color == RBColor.Black)
                     {
-                        w.color = RBColor.Red;              // Случай 2
-                        node = node.parent;                 // Случай 2
+                        w._color = RBColor.Red;              // Случай 2
+                        node = node._parent;                 // Случай 2
                     }
                     else
                     {
-                        if (w.right.color == RBColor.Black)
+                        if (w._right._color == RBColor.Black)
                         {
-                            w.left.color = RBColor.Black;   // Случай 3
-                            w.color = RBColor.Red;          // Случай 3
+                            w._left._color = RBColor.Black;   // Случай 3
+                            w._color = RBColor.Red;          // Случай 3
                             RightRotate(w);                 // Случай 3
-                            w = node.parent.right;          // Случай 3
+                            w = node._parent._right;          // Случай 3
                         }
-                        w.color = node.parent.color;        // Случай 4
-                        node.parent.color = RBColor.Black;  // Случай 4
-                        w.right.color = RBColor.Black;      // Случай 4
-                        LeftRotate(node.parent);            // Случай 4
-                        node = root;                        // Случай 4
+                        w._color = node._parent._color;        // Случай 4
+                        node._parent._color = RBColor.Black;  // Случай 4
+                        w._right._color = RBColor.Black;      // Случай 4
+                        LeftRotate(node._parent);            // Случай 4
+                        node = _root;                        // Случай 4
                     }
                 }
                 else
                 {
-                    w = node.parent.left;
-                    if (w.color == RBColor.Red)
+                    w = node._parent._left;
+                    if (w._color == RBColor.Red)
                     {
-                        w.color = RBColor.Black;            // Случай 5
-                        node.parent.color = RBColor.Red;    // Случай 5
-                        RightRotate(node.parent);           // Случай 5
-                        w = node.parent.left;               // Случай 5
+                        w._color = RBColor.Black;            // Случай 5
+                        node._parent._color = RBColor.Red;    // Случай 5
+                        RightRotate(node._parent);           // Случай 5
+                        w = node._parent._left;               // Случай 5
                     }
-                    if (w.right.color == RBColor.Black && w.left.color == RBColor.Black)
+                    if (w._right._color == RBColor.Black && w._left._color == RBColor.Black)
                     {
-                        w.color = RBColor.Red;              // Случай 6
-                        node = node.parent;                 // Случай 6
+                        w._color = RBColor.Red;              // Случай 6
+                        node = node._parent;                 // Случай 6
                     }
                     else
                     {
-                        if (w.left.color == RBColor.Black)
+                        if (w._left._color == RBColor.Black)
                         {
-                            w.right.color = RBColor.Black;  // Случай 7
-                            w.color = RBColor.Red;          // Случай 7
+                            w._right._color = RBColor.Black;  // Случай 7
+                            w._color = RBColor.Red;          // Случай 7
                             LeftRotate(w);                  // Случай 7
-                            w = node.parent.left;           // Случай 7
+                            w = node._parent._left;           // Случай 7
                         }
-                        w.color = node.parent.color;        // Случай 8
-                        node.parent.color = RBColor.Black;  // Случай 8
-                        w.left.color = RBColor.Black;       // Случай 8
-                        RightRotate(node.parent);           // Случай 8
-                        node = root;                        // Случай 8
+                        w._color = node._parent._color;        // Случай 8
+                        node._parent._color = RBColor.Black;  // Случай 8
+                        w._left._color = RBColor.Black;       // Случай 8
+                        RightRotate(node._parent);           // Случай 8
+                        node = _root;                        // Случай 8
                     }
                 }
             }
 
-            node.color = RBColor.Black;
+            node._color = RBColor.Black;
         }
     }
 }

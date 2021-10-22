@@ -1,4 +1,5 @@
 ﻿using System;
+using CLRS.Core.Structures;
 using CLRS.Tests.Stubs;
 
 namespace CLRS.Tests.Generators
@@ -42,6 +43,25 @@ namespace CLRS.Tests.Generators
             where TKey : class, IComparable<TKey>
         {
             return (node.Right as BinaryTreeNodeStub<TKey, TValue>);
+        }
+
+        /// <summary>
+        ///     Заменяет все пустые поддеревья на Nil-листья
+        /// </summary>
+        public static BinaryTreeNodeStub<TKey, TValue> WithEnrichNilNodes<TKey, TValue>(this BinaryTreeNodeStub<TKey, TValue> node)
+            where TKey : class, IComparable<TKey>
+        {
+            if (node.Left == null)
+                node.SetLeftNode(BinaryTreeNodeStub<TKey, TValue>.Nil);
+            else
+                (node.Left as BinaryTreeNodeStub<TKey, TValue>).WithEnrichNilNodes();
+
+            if (node.Right == null)
+                node.SetRightNode(BinaryTreeNodeStub<TKey, TValue>.Nil);
+            else
+                (node.Right as BinaryTreeNodeStub<TKey, TValue>).WithEnrichNilNodes();
+
+            return node;
         }
     }
 }
