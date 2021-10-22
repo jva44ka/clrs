@@ -27,55 +27,55 @@ namespace CLRS.Core.Structures
         public IBinaryTreeNode<TKey, TValue> Left => _left;
         public IBinaryTreeNode<TKey, TValue> Right => _right;
 
-        internal int BlackHeight(RBTNode<TKey, TValue> node, int height)
+        public int BlackHeight(int height)
         {
-            if (node._color == RBColor.Black && node != Nil)
+            if (_color == RBColor.Black && this != Nil)
                 height++;
 
-            if (node._parent != null)
-                return BlackHeight(node._parent, height);
+            if (_parent != null)
+                return _parent.BlackHeight(height);
             else
                 return height;
         }
 
-        internal RBTNode<TKey, TValue> Search(RBTNode<TKey, TValue> node, TKey key)
+        public RBTNode<TKey, TValue> Search(TKey key)
         {
-            if (node == Nil)
+            if (this == Nil)
                 throw new ArgumentException("Node with this key is not exists");
 
-            if (key.Equals(node._key))
-                return node;
+            if (key.Equals(_key))
+                return this;
 
-            var compareResult = key.CompareTo(node._key);
+            var compareResult = key.CompareTo(_key);
             if (compareResult < 0)
-                return Search(node._left, key);
+                return _left.Search(key);
             else
-                return Search(node._right, key);
+                return _right.Search(key);
         }
 
-        internal RBTNode<TKey, TValue> Minimum(RBTNode<TKey, TValue> node)
+        internal RBTNode<TKey, TValue> Minimum()
         {
-            if (node._left == Nil)
-                return node;
-            return Minimum(node._left);
+            if (_left == Nil)
+                return this;
+            return _left.Minimum();
         }
 
-        internal RBTNode<TKey, TValue> Maximum(RBTNode<TKey, TValue> node)
+        internal RBTNode<TKey, TValue> Maximum()
         {
-            if (node._right == Nil)
-                return node;
-            return Maximum(node._right);
+            if (_right == Nil)
+                return this;
+            return _right.Maximum();
         }
 
-        internal List<TValue> InOrderTreeWalk(RBTNode<TKey, TValue> node, List<TValue> result)
+        internal List<TValue> InOrderTreeWalk(List<TValue> result)
         {
             result ??= new List<TValue>();
-            if (node._left != Nil)
-                InOrderTreeWalk(node._left, result);
 
-            result.Add(node._value);
-            if (node._right != Nil)
-                InOrderTreeWalk(node._right, result);
+            if (_left != Nil)
+                _left.InOrderTreeWalk(result);
+            result.Add(_value);
+            if (_right != Nil)
+                _right.InOrderTreeWalk(result);
 
             return result;
         }
@@ -94,7 +94,7 @@ namespace CLRS.Core.Structures
 
         public List<TValue> InOrderTreeWalk()
         {
-            return _root.InOrderTreeWalk(_root, new List<TValue>());
+            return _root.InOrderTreeWalk(new List<TValue>());
         }
 
         public void Insert(TKey key, TValue value)
@@ -108,7 +108,7 @@ namespace CLRS.Core.Structures
 
         public void Delete(TKey key)
         {
-            var findedNode = _root.Search(_root, key);
+            var findedNode = _root.Search(key);
             Delete(findedNode);
         }
 
@@ -236,7 +236,7 @@ namespace CLRS.Core.Structures
                 }
                 else
                 {
-                    var height = newNode.BlackHeight(newNode, 0);
+                    var height = newNode.BlackHeight(0);
                     var y = newNode._parent._parent._left;
                     if (y._color == RBColor.Red)
                     {
@@ -291,7 +291,7 @@ namespace CLRS.Core.Structures
             }
             else
             {
-                y = _root.Minimum(deletingNode._right);
+                y = deletingNode._right.Minimum();
                 yOriginalColor = y._color;
                 x = y._right;
                 if (y._parent == deletingNode)
