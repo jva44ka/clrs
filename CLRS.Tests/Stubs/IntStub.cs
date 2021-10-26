@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CLRS.Tests.Stubs
+﻿namespace CLRS.Tests.Stubs
 {
+    /// <summary>
+    ///     Стаб интов с переопределеными GetHashCode
+    /// </summary>
     public class IntStub
     {
-        private int _value;
+        protected int _value;
 
         public IntStub(int value)
         {
@@ -18,6 +17,41 @@ namespace CLRS.Tests.Stubs
         public override int GetHashCode()
         {
             return _value;
+        }
+
+        public override string ToString()
+        {
+            return _value.ToString();
+        }
+    }
+    
+    /// <summary>
+    ///     Стаб интов с GetHashCode возвращающим всегда 0
+    /// </summary>
+    /// <returns>Для теста коллизий в хеш-таблице</returns>
+    public class SameHashCodeIntStub : IntStub
+    {
+        public SameHashCodeIntStub(int value) : base(value)
+        { }
+
+        public static explicit operator SameHashCodeIntStub(int intValue)
+        {
+            return new SameHashCodeIntStub(intValue);
+        }
+
+        public override int GetHashCode()
+        {
+            return 0;
+        }
+
+        public override string ToString()
+        {
+            return _value.ToString();
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return _value.ToString().Equals(obj?.ToString());
         }
     }
 }

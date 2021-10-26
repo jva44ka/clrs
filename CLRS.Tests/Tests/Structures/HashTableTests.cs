@@ -1,4 +1,8 @@
-﻿using CLRS.Core.Structures;
+﻿using System.Collections.Generic;
+using System.Linq;
+using CLRS.Core.Structures;
+using CLRS.Tests.Generators;
+using CLRS.Tests.Stubs;
 using NUnit.Framework;
 
 namespace CLRS.Tests.Tests.Structures
@@ -45,6 +49,21 @@ namespace CLRS.Tests.Tests.Structures
             hashTable.Remove(key);
             Assert.AreEqual(0, hashTable.Count);
             Assert.AreEqual(null, hashTable[key]);
+        }
+        
+        [Test]
+        public void Insert_OtherNumbers_AddsAllNumbersWithCollision()
+        {
+            //Arrange
+            var hashTable = new HashTable<SameHashCodeIntStub, string>();
+            hashTable.Insert((SameHashCodeIntStub)1, "1");
+
+            //Act
+            hashTable.Insert((SameHashCodeIntStub)2, "2");
+
+            //Assert
+            Assert.AreEqual((SameHashCodeIntStub)1, hashTable[(SameHashCodeIntStub)1]);
+            Assert.AreEqual((SameHashCodeIntStub)2, hashTable[(SameHashCodeIntStub)2]);
         }
     }
 }
