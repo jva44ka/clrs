@@ -65,25 +65,6 @@ namespace CLRS.Tests.Tests.Structures
             Assert.AreEqual(value1, hashTable[key1]);
             Assert.AreEqual(value2, hashTable[key2]);
         }
-
-        [Test]
-        public void AddAndRemove()
-        {
-            var key = "Ключик 85485";
-            var value = "Значение №93448";
-
-            var hashTable = new HashTable<string, string>();
-            Assert.AreEqual(0, hashTable.Count);
-            Assert.AreEqual(null, hashTable[key]);
-
-            hashTable.Insert(key, value);
-            Assert.AreEqual(1, hashTable.Count);
-            Assert.AreEqual(value, hashTable[key]);
-
-            hashTable.Remove(key);
-            Assert.AreEqual(0, hashTable.Count);
-            Assert.AreEqual(null, hashTable[key]);
-        }
         
         [Test]
         public void Insert_ExistNumberWithSameHashCode_AddsAllNumbersWithCollision()
@@ -101,9 +82,26 @@ namespace CLRS.Tests.Tests.Structures
             Assert.AreEqual("1", hashTable[one].ToString());
             Assert.AreEqual("2", hashTable[two].ToString());
         }
-        
+
         [Test]
-        public void Remove_ExistNumberWithSameHashCode_AddsAllNumbersWithCollision()
+        public void Remove_WithThereIsOneEntity_RemoveEntity()
+        {
+            //Arrange
+            var key = (IntStub)1;
+            var value = "Значение №93448";
+            var hashTable = new HashTable<IntStub, string>();
+            hashTable.Insert(key, value);
+
+            //Act
+            hashTable.Remove(key);
+
+            //Assert
+            Assert.AreEqual(0, hashTable.Count);
+            Assert.AreEqual(null, hashTable[key]);
+        }
+
+        [Test]
+        public void Remove_ExistNumberWithSameHashCode_RemoveNumberWithCollision()
         {
             //Arrange
             var hashTable = new HashTable<SameHashCodeIntStub, string>();
