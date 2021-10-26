@@ -59,7 +59,7 @@ namespace CLRS.Core.Structures
         /// <summary>
         ///     Удаление ноды в связанном списке (коллизии)
         /// </summary>
-        /// <returns>Новая головная нода связанного списка</returns>
+        /// <returns>Головная нода связанного списка</returns>
         public Entry<TKey, TValue> RemoveFromList(TKey key)
         {
             var entry = Find(key);
@@ -106,17 +106,14 @@ namespace CLRS.Core.Structures
         /// </summary>
         private const double UpFullnessBorder = 0.8;
 
-        // Элементы вместе с ключем и ссылками на предыдущий/следущий элементы в списке (если есть коллизия)
-        private Entry<TKey, TValue>[] _entries;
+        /// <summary>
+        ///     Элементы вместе с ключем и ссылками на предыдущий/следущий элементы в списке (если есть коллизия)
+        /// </summary>
+        private readonly Entry<TKey, TValue>[] _entries = new Entry<TKey, TValue>[EntriesInitSize];
 
         public int Capacity => _entries.Length;
         public int Count => _entries.Count(el => el != null); 
         public double Fullness => (double)Count / _entries.Length;
-
-        public HashTable()
-        {
-            _entries = new Entry<TKey, TValue>[EntriesInitSize];
-        }
 
         public object this[TKey key]
         {
