@@ -19,11 +19,11 @@ namespace CLRS.Tests.Tests.Structures
             Assert.AreEqual(null, hashTable[key1]);
             Assert.AreEqual(null, hashTable[key2]);
 
-            hashTable.Add(key1, value1);
+            hashTable.Insert(key1, value1);
             Assert.AreEqual(1, hashTable.Count);
             Assert.AreEqual(value1, hashTable[key1]);
 
-            hashTable.Add(key2, value2);
+            hashTable.Insert(key2, value2);
             Assert.AreEqual(2, hashTable.Count);
             Assert.AreEqual(value2, hashTable[key2]);
         }
@@ -38,7 +38,7 @@ namespace CLRS.Tests.Tests.Structures
             Assert.AreEqual(0, hashTable.Count);
             Assert.AreEqual(null, hashTable[key]);
 
-            hashTable.Add(key, value);
+            hashTable.Insert(key, value);
             Assert.AreEqual(1, hashTable.Count);
             Assert.AreEqual(value, hashTable[key]);
 
