@@ -52,18 +52,38 @@ namespace CLRS.Tests.Tests.Structures
         }
         
         [Test]
-        public void Insert_OtherNumbers_AddsAllNumbersWithCollision()
+        public void Insert_ExistNumberWithSameHashCode_AddsAllNumbersWithCollision()
         {
             //Arrange
             var hashTable = new HashTable<SameHashCodeIntStub, string>();
-            hashTable.Insert((SameHashCodeIntStub)1, "1");
+            var one = (SameHashCodeIntStub) 1;
+            var two = (SameHashCodeIntStub) 2;
+            hashTable.Insert(one, "1");
 
             //Act
-            hashTable.Insert((SameHashCodeIntStub)2, "2");
+            hashTable.Insert(two, "2");
 
             //Assert
-            Assert.AreEqual((SameHashCodeIntStub)1, hashTable[(SameHashCodeIntStub)1]);
-            Assert.AreEqual((SameHashCodeIntStub)2, hashTable[(SameHashCodeIntStub)2]);
+            Assert.AreEqual("1", hashTable[one].ToString());
+            Assert.AreEqual("2", hashTable[two].ToString());
+        }
+        
+        [Test]
+        public void Remove_ExistNumberWithSameHashCode_AddsAllNumbersWithCollision()
+        {
+            //Arrange
+            var hashTable = new HashTable<SameHashCodeIntStub, string>();
+            var one = (SameHashCodeIntStub) 1;
+            var two = (SameHashCodeIntStub) 2;
+            hashTable.Insert(one, "1");
+            hashTable.Insert(two, "2");
+
+            //Act
+            hashTable.Remove(two);
+
+            //Assert
+            Assert.AreEqual("1", hashTable[one].ToString());
+            Assert.AreEqual(null, hashTable[two]);
         }
     }
 }

@@ -166,7 +166,7 @@ namespace CLRS.Core.Structures
         bool IsExistsKey(TKey key)
         {
             foreach (var entry in _entries.Where(e => e != null))
-                if (key.Equals(entry._key))
+                if (entry.Find(key) != null)
                     return true;
 
             return false;
