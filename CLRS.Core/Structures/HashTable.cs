@@ -1,14 +1,26 @@
 ﻿using System;
+using System.Data;
 using System.Linq;
 
 namespace CLRS.Core.Structures
 {
     public class Entry<TKey, TValue>
     {
-        public int _prev;
-        public int _next;
+        public Entry<TKey, TValue> _prev;
+        public Entry<TKey, TValue> _next;
         public TKey _key;
         public TValue _value;
+
+        public Entry<TKey, TValue> Last
+        {
+            get
+            {
+                if (_next == null)
+                    return this;
+
+                return _next.Last;
+            }
+        }
 
         public Entry()
         { }
@@ -18,14 +30,81 @@ namespace CLRS.Core.Structures
             _key = key;
             _value = value;
         }
+
+        /// <summary>
+        ///     Поиск значения с заданным ключем в связанном списке (коллизия)
+        /// </summary>
+        public Entry<TKey, TValue> Find(TKey key)
+        {
+            if (_key.Equals(key))
+                return this;
+
+            if (_next != null)
+                return _next.Find(key);
+            else
+                return null;
+        }
+
+        /// <summary>
+        ///     Добавление ноды в конец связанного списка (коллизия)
+        /// </summary>
+        public void AddToList(Entry<TKey, TValue> newNode)
+        {
+            var lastNode = Last;
+            lastNode._next = newNode;
+            newNode._prev = lastNode;
+
+        }
+
+        /// <summary>
+        ///     Удаление ноды в связанном списке (коллизии)
+        /// </summary>
+        /// <returns>Новая головная нода связанного списка</returns>
+        public Entry<TKey, TValue> RemoveFromList(TKey key)
+        {
+            var entry = Find(key);
+
+            //  Удаляемая нода в середине списка
+            if (entry._prev != null && entry._next != null)
+            {
+                entry._prev._next = entry._next;
+                entry._next._prev = entry._prev;
+            }
+            // Удаляемая нода в конце списка
+            else if (entry._next == null && entry._prev != null)
+            {
+                entry._prev._next = null;
+            }
+            // Удаляемая нода в начале списка
+            else if (entry._next != null && entry._prev == null)
+            {
+                entry._next._prev = null;
+                return entry._next;
+            }
+            // Удаляемая нода единственная в списке
+            else
+                return null;
+
+            return this;
+        }
     }
 
     public class HashTable<TKey, TValue>
     {
         /// <summary>
-        ///     Стартовый размер массива по умолчанию
+        ///     Стартовый размер массива entries по умолчанию
         /// </summary>
-        private const int InitArraysSize = 8;
+        private const int EntriesInitSize = 8;
+
+        /// <summary>
+        ///     Нижняя граница коэффициента заполненности, при пересечении которого происходит уменьшение вместимости хеш-таблицы
+        /// </summary>
+        private const double DownFullnessBorder = 0.3;
+
+        /// <summary>
+        ///     Верхняя граница коэффициента заполненности, при пересечении которого происходит увеличение вместимости хеш-таблицы
+        /// </summary>
+        private const double UpFullnessBorder = 0.8;
 
         // Элементы вместе с ключем и ссылками на предыдущий/следущий элементы в списке (если есть коллизия)
         private Entry<TKey, TValue>[] _entries;
@@ -36,7 +115,7 @@ namespace CLRS.Core.Structures
 
         public HashTable()
         {
-            InitArray();
+            _entries = new Entry<TKey, TValue>[EntriesInitSize];
         }
 
         public object this[TKey key]
@@ -44,9 +123,11 @@ namespace CLRS.Core.Structures
             get
             {
                 var entriesIndex = GetEntriesIndex(key);
+                var headEntry = _entries[entriesIndex];
+                var entry = headEntry?.Find(key);
 
-                if (_entries[entriesIndex] != null)
-                    return _entries[entriesIndex]._value;
+                if (entry != null)
+                    return entry._value;
                 else
                     return null;
             }
@@ -56,35 +137,35 @@ namespace CLRS.Core.Structures
         {
             if (IsExistsKey(key))
                 throw new ArgumentException("Element with equal key is already exists");
-
-            // TODO: Вынести?
-            if (Fullness > 0.7)
+            
+            if (Fullness > UpFullnessBorder)
                 Resize(Capacity * 2);
 
             var entriesIndex = GetEntriesIndex(key);
 
+            // Есть ли уже с таким хешем сущность
             if (_entries[entriesIndex] != null)
-            {
-                // TODO: Тут коллизия, обработать
-            }
-
-            _entries[entriesIndex] = new Entry<TKey, TValue>(key, value);
+                _entries[entriesIndex].AddToList(new Entry<TKey, TValue>(key, value));
+            else
+                _entries[entriesIndex] = new Entry<TKey, TValue>(key, value);
         }
 
         public void Remove(TKey key)
         {
             if (!IsExistsKey(key))
                 throw new ArgumentException("Element with this key is not exists in hash table");
-
-            // TODO: Вынести?
-            if (Fullness < 0.7)
+            
+            if (Fullness < DownFullnessBorder)
                 Resize(Capacity / 2);
 
             var entriesIndex = GetEntriesIndex(key);
 
-            _entries[entriesIndex] = null;
+            _entries[entriesIndex] = _entries[entriesIndex].RemoveFromList(key);
         }
 
+        /// <summary>
+        ///     True, если в entries уже есть значение с таким ключем
+        /// </summary>
         bool IsExistsKey(TKey key)
         {
             foreach (var entry in _entries.Where(e => e != null))
@@ -102,17 +183,10 @@ namespace CLRS.Core.Structures
             return Math.Abs(key.GetHashCode()) % Capacity; 
         }
 
-        #region ArraysHandlers
-        void InitArray(int length = InitArraysSize)
-        {
-            _entries = new Entry<TKey, TValue>[length];
-        }
-
-        void Resize(int newLength = InitArraysSize)
+        void Resize(int newLength = EntriesInitSize)
         {
             // 1. Поменять алгоритм хеширования
             // 2. Перехешировать существующие значения
         }
-        #endregion
     }
 }
