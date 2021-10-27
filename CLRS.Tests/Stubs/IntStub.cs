@@ -1,7 +1,7 @@
 ﻿namespace CLRS.Tests.Stubs
 {
     /// <summary>
-    ///     Стаб интов с переопределеными GetHashCode
+    ///     Стаб Int32 с переопределеным GetHashCode, возвращающим этот же инт
     /// </summary>
     public class IntStub
     {

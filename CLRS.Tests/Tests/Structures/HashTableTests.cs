@@ -67,15 +67,15 @@ namespace CLRS.Tests.Tests.Structures
         }
         
         [Test]
-        public void Insert_ExistNumberWithSameHashCode_AddsAllNumbersWithCollision()
+        public void Insert_TwoValuesWithSameHashCode_AddsAllNumbersWithCollision()
         {
             //Arrange
             var hashTable = new HashTable<SameHashCodeIntStub, string>();
             var one = (SameHashCodeIntStub) 1;
             var two = (SameHashCodeIntStub) 2;
-            hashTable.Insert(one, "1");
 
             //Act
+            hashTable.Insert(one, "1");
             hashTable.Insert(two, "2");
 
             //Assert
