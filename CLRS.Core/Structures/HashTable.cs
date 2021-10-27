@@ -1,29 +1,28 @@
 ﻿using System;
-using System.Data;
 using System.Linq;
 
 namespace CLRS.Core.Structures
 {
     public class Entry<TKey, TValue>
     {
-        public Entry<TKey, TValue> _prev;
-        public Entry<TKey, TValue> _next;
-        public TKey _key;
-        public TValue _value;
+        internal Entry<TKey, TValue> _prev;
+        internal Entry<TKey, TValue> _next;
+        internal TKey _key;
+        internal TValue _value;
 
+        /// <summary>
+        ///     Поиск последнего значения в связанном списке (коллизия)
+        /// </summary>
         public Entry<TKey, TValue> Last
         {
             get
             {
                 if (_next == null)
                     return this;
-
-                return _next.Last;
+                else
+                    return _next.Last;
             }
         }
-
-        public Entry()
-        { }
 
         public Entry(TKey key, TValue value)
         {
@@ -53,7 +52,6 @@ namespace CLRS.Core.Structures
             var lastNode = Last;
             lastNode._next = newNode;
             newNode._prev = lastNode;
-
         }
 
         /// <summary>
@@ -69,11 +67,13 @@ namespace CLRS.Core.Structures
             {
                 entry._prev._next = entry._next;
                 entry._next._prev = entry._prev;
+                return this;
             }
             // Удаляемая нода в конце списка
             else if (entry._next == null && entry._prev != null)
             {
                 entry._prev._next = null;
+                return this;
             }
             // Удаляемая нода в начале списка
             else if (entry._next != null && entry._prev == null)
@@ -84,8 +84,6 @@ namespace CLRS.Core.Structures
             // Удаляемая нода единственная в списке
             else
                 return null;
-
-            return this;
         }
     }
 
@@ -152,7 +150,7 @@ namespace CLRS.Core.Structures
             if (!IsExistsKey(key))
                 throw new ArgumentException("Element with this key is not exists in hash table");
             
-            if (Fullness < DownFullnessBorder)
+            if (Fullness < DownFullnessBorder && Capacity > EntriesInitSize)
                 Resize(Capacity / 2);
 
             var entriesIndex = GetEntriesIndex(key);

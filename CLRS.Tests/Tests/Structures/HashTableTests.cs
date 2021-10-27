@@ -82,6 +82,28 @@ namespace CLRS.Tests.Tests.Structures
             Assert.AreEqual("1", hashTable[one].ToString());
             Assert.AreEqual("2", hashTable[two].ToString());
         }
+        
+        [Test]
+        public void Insert_NineValues_AddsAllNumbersWithResizingHashTableArray()
+        {
+            //Arrange
+            var hashTable = new HashTable<IntStub, string>();
+            var numbers = IntStubGenerator.GetFirst100Numbers();
+            var oldCapacity = hashTable.Capacity;
+            var expectedNewCapacity = oldCapacity * 2;
+            var expectedValues = IntStubGenerator.GetFirst100Numbers().Take(9).Select(number => number.ToString());
+
+            //Act
+            foreach (var number in numbers.Take(9))
+                hashTable.Insert(number, number.ToString());
+
+            //Assert
+            var actualValues = new List<string>();
+            foreach (var number in numbers.Take(5))
+                actualValues.Add((string)hashTable[number]);
+            Assert.AreEqual(expectedNewCapacity, hashTable.Capacity);
+            CollectionAssert.AreEqual(expectedValues, actualValues);
+        }
 
         [Test]
         public void Remove_WithThereIsOneEntity_RemoveEntity()
