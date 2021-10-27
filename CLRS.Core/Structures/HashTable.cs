@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CLRS.Core.Structures
@@ -85,6 +86,33 @@ namespace CLRS.Core.Structures
             else
                 return null;
         }
+
+        /// <summary>
+        ///     Возвращает все связанные ноды в формате IEnumerable
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Entry<TKey, TValue>> ToEnumerable()
+        {
+            var count = RecurciveCount(0);
+            var array = new Entry<TKey, TValue>[count];
+            var currentNode = this;
+            for (int i = 0; i < count; i++)
+            {
+                array[i] = currentNode;
+                currentNode = currentNode._next;
+            }
+
+            return array;
+        }
+
+        int RecurciveCount(int counter)
+        {
+            counter++;
+            if (_next != null) 
+                return _next.RecurciveCount(counter);
+            else
+                return counter;
+        }
     }
 
     public class HashTable<TKey, TValue>
@@ -92,12 +120,12 @@ namespace CLRS.Core.Structures
         /// <summary>
         ///     Стартовый размер массива entries по умолчанию
         /// </summary>
-        private const int EntriesInitSize = 8;
+        private const int EntriesMinSize = 8;
 
         /// <summary>
         ///     Нижняя граница коэффициента заполненности, при пересечении которого происходит уменьшение вместимости хеш-таблицы
         /// </summary>
-        private const double DownFullnessBorder = 0.3;
+        private const double DownFullnessBorder = 0.4;
 
         /// <summary>
         ///     Верхняя граница коэффициента заполненности, при пересечении которого происходит увеличение вместимости хеш-таблицы
@@ -107,7 +135,7 @@ namespace CLRS.Core.Structures
         /// <summary>
         ///     Элементы вместе с ключем и ссылками на предыдущий/следущий элементы в списке (если есть коллизия)
         /// </summary>
-        private readonly Entry<TKey, TValue>[] _entries = new Entry<TKey, TValue>[EntriesInitSize];
+        private Entry<TKey, TValue>[] _entries = new Entry<TKey, TValue>[EntriesMinSize];
 
         public int Capacity => _entries.Length;
         public int Count => _entries.Count(el => el != null); 
@@ -128,6 +156,9 @@ namespace CLRS.Core.Structures
             }
         }
 
+        /// <summary>
+        ///     Вставка нового значения
+        /// </summary>
         public void Insert(TKey key, TValue value)
         {
             if (IsExistsKey(key))
@@ -145,12 +176,15 @@ namespace CLRS.Core.Structures
                 _entries[entriesIndex] = new Entry<TKey, TValue>(key, value);
         }
 
+        /// <summary>
+        ///     Удаление значения
+        /// </summary>
         public void Remove(TKey key)
         {
             if (!IsExistsKey(key))
                 throw new ArgumentException("Element with this key is not exists in hash table");
             
-            if (Fullness < DownFullnessBorder && Capacity > EntriesInitSize)
+            if (Fullness < DownFullnessBorder && Capacity > EntriesMinSize)
                 Resize(Capacity / 2);
 
             var entriesIndex = GetEntriesIndex(key);
@@ -178,10 +212,17 @@ namespace CLRS.Core.Structures
             return Math.Abs(key.GetHashCode()) % Capacity; 
         }
 
-        void Resize(int newLength = EntriesInitSize)
+        /// <summary>
+        ///     Ресайз массива _entries для того, чтобы:
+        ///         1) Не пустовала большая часть массива (значений слишком мало, уменьшаем размер массива)
+        ///         2) Не было коллизий из-за переполнения массива (значений слишком много, увеличиваем размер массива)
+        /// </summary>
+        void Resize(int newLength)
         {
-            // 1. Поменять алгоритм хеширования
-            // 2. Перехешировать существующие значения
+            var bufferEntries = _entries.Where(e => e != null).SelectMany(e => e.ToEnumerable());
+            _entries = new Entry<TKey, TValue>[newLength];
+            foreach (var entry in bufferEntries)
+                Insert(entry._key, entry._value);
         }
     }
 }

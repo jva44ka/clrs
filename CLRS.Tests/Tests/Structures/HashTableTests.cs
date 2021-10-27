@@ -91,7 +91,7 @@ namespace CLRS.Tests.Tests.Structures
             var numbers = IntStubGenerator.GetFirst100Numbers();
             var oldCapacity = hashTable.Capacity;
             var expectedNewCapacity = oldCapacity * 2;
-            var expectedValues = IntStubGenerator.GetFirst100Numbers().Take(9).Select(number => number.ToString());
+            var expectedValues = IntStubGenerator.GetFirst100Numbers().Take(9).Select(number => number.ToString()).ToList();
 
             //Act
             foreach (var number in numbers.Take(9))
@@ -99,7 +99,7 @@ namespace CLRS.Tests.Tests.Structures
 
             //Assert
             var actualValues = new List<string>();
-            foreach (var number in numbers.Take(5))
+            foreach (var number in numbers.Take(9))
                 actualValues.Add((string)hashTable[number]);
             Assert.AreEqual(expectedNewCapacity, hashTable.Capacity);
             CollectionAssert.AreEqual(expectedValues, actualValues);
@@ -138,6 +138,32 @@ namespace CLRS.Tests.Tests.Structures
             //Assert
             Assert.AreEqual("1", hashTable[one].ToString());
             Assert.AreEqual(null, hashTable[two]);
+        }
+
+        [Test]
+        public void Remove_ThreeValueFromTableWithNineValues_RemovesValueWithResizingHashTableArray()
+        {
+            //Arrange
+            var hashTable = new HashTable<IntStub, string>();
+            var numbers = IntStubGenerator.GetFirst100Numbers();
+            var expectedValues = IntStubGenerator.GetFirst100Numbers().Take(5).Select(number => number.ToString()).ToList();
+            foreach (var number in numbers.Take(9))
+                hashTable.Insert(number, number.ToString());
+            var oldCapacity = hashTable.Capacity;
+            var expectedNewCapacity = oldCapacity / 2;
+
+            //Act
+            hashTable.Remove(numbers[8]);
+            hashTable.Remove(numbers[7]);
+            hashTable.Remove(numbers[6]);
+            hashTable.Remove(numbers[5]);
+
+            //Assert
+            var actualValues = new List<string>();
+            foreach (var number in numbers.Take(5))
+                actualValues.Add((string)hashTable[number]);
+            Assert.AreEqual(expectedNewCapacity, hashTable.Capacity);
+            CollectionAssert.AreEqual(expectedValues, actualValues);
         }
     }
 }
