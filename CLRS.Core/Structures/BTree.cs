@@ -5,16 +5,17 @@ namespace CLRS.Core.Structures
 {
     public class BTreeNode<TKey, TValue> where TKey : class, IComparable<TKey>
     {
-        int _keysCount = 0;                                 // x.n - количество ключей
+        int _keysCount;                                     // x.n - количество ключей
         List<TKey> _keys = new List<TKey>();                // список x.n ключей в неубывающем порядке
-        List<BTreeNode<TKey, TValue>> _subTrees;            // список x.(n + 1) указателей на дочерние узлы. У листьев этот список пуст
-        bool _isLeaf = false;                               // True, если является листом. Листы содержат информацию (values)
+        BTreeNode<TKey, TValue> _parent;                    // родительский узел
+        BTreeNode<TKey, TValue> _child;                     // первый дорчерний узел из списка. У листьев этот список пуст
+        BTreeNode<TKey, TValue> _next;                      // следующий за текущим узел на том же уровне (брат)
+        bool _isLeaf;                                       // True, если является листом. Листы содержат информацию (values)
 
         public BTreeNode()
         {
             _keysCount = 0;
             _keys = new List<TKey>();
-            _subTrees = new List<BTreeNode<TKey, TValue>>();
             _isLeaf = true;   
         }
 
@@ -28,7 +29,7 @@ namespace CLRS.Core.Structures
             else if (_isLeaf)
                 throw new ArgumentException("That value not found");
             else
-                return _subTrees[i].Search(key);
+                return _next.Search(key);
         }
 
         public class BTreeSearchResult<TKey, TValue> where TKey : class, IComparable<TKey>
@@ -51,8 +52,30 @@ namespace CLRS.Core.Structures
         }
     }
 
-    public class BTree<TKey, TValue>
+    public class BTree<TKey, TValue> where TKey : class, IComparable<TKey>
     {
+        private int _t = 2;
+        private BTreeNode<TKey, TValue> _root;
+
+        public BTree()
+        { }
+
+        public BTree(int t)
+        {
+            _t = t;
+        }
+        
+        public BTree(BTreeNode<TKey, TValue> root)
+        {
+            _root = root;
+        }
+        
+        public BTree(int t, BTreeNode<TKey, TValue> root)
+        {
+            _t = t;
+            _root = root;
+        }
+
 
     }
 }
