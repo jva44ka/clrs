@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CLRS.Core.Structures
+namespace CLRS.Core.Structures.HashTable
 {
     public class Entry<TKey, TValue>
     {
@@ -108,7 +108,7 @@ namespace CLRS.Core.Structures
         int RecurciveCount(int counter)
         {
             counter++;
-            if (_next != null) 
+            if (_next != null)
                 return _next.RecurciveCount(counter);
             else
                 return counter;
@@ -138,7 +138,7 @@ namespace CLRS.Core.Structures
         private Entry<TKey, TValue>[] _entries = new Entry<TKey, TValue>[EntriesMinSize];
 
         public int Capacity => _entries.Length;
-        public int Count => _entries.Count(el => el != null); 
+        public int Count => _entries.Count(el => el != null);
         public double Fullness => (double)Count / _entries.Length;
 
         public object this[TKey key]
@@ -163,7 +163,7 @@ namespace CLRS.Core.Structures
         {
             if (IsExistsKey(key))
                 throw new ArgumentException("Element with equal key is already exists");
-            
+
             if (Fullness > UpFullnessBorder)
                 Resize(Capacity * 2);
 
@@ -183,7 +183,7 @@ namespace CLRS.Core.Structures
         {
             if (!IsExistsKey(key))
                 throw new ArgumentException("Element with this key is not exists in hash table");
-            
+
             if (Fullness < DownFullnessBorder && Capacity > EntriesMinSize)
                 Resize(Capacity / 2);
 
@@ -209,7 +209,7 @@ namespace CLRS.Core.Structures
         /// </summary>
         int GetEntriesIndex(TKey key)
         {
-            return Math.Abs(key.GetHashCode()) % Capacity; 
+            return Math.Abs(key.GetHashCode()) % Capacity;
         }
 
         /// <summary>

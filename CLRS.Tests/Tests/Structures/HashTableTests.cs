@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using CLRS.Core.Structures;
+using CLRS.Core.Structures.HashTable;
 using CLRS.Tests.Generators;
 using CLRS.Tests.Stubs;
 using NUnit.Framework;
